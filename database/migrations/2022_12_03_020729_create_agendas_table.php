@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blogs', function (Blueprint $table) {
+        Schema::create('agendas', function (Blueprint $table) {
             $table->id();
+            // $table->foreignId('agenda_detail_id');
             $table->foreignId('user_id');
             $table->string('title');
-            $table->string('slug')->unique();
-            $table->text('body');
-            $table->text('image')->nullable();
+            $table->string('image');
+            $table->string('location');
+            $table->datetime('date');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
@@ -32,6 +33,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blogs');
+        Schema::dropIfExists('agendas');
     }
 };
+// title, image, date, location, agendadetailid (timestamp, rundown, key person)

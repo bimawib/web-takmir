@@ -2,15 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Blog;
-
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Blog>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Agenda>
  */
-class BlogFactory extends Factory
+class AgendaFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,13 +17,13 @@ class BlogFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'=>$this->faker->numberBetween(1,13),
-            'slug'=>$this->faker->slug(3),
+            'user_id'=>$this->faker->unique()->numberBetween(1,3),
             'title'=>$this->faker->sentence(3),
-            'body'=>$this->faker->paragraph(5),
             'image'=>$this->faker->imageUrl(360, 360, 'animals', true, 'cats'),
+            'location'=>$this->faker->word(),
+            // 'date'=>$this->faker->date('d-m-Y'),
+            'date'=>$this->faker->date(),
             'published_at'=>$this->faker->date()
         ];
     }
 }
-// kalo mau tambah bikin array baru aja
