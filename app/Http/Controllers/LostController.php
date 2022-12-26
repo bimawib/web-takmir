@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\api\V1;
+namespace App\Http\Controllers;
 
 use App\Models\Lost;
-use App\Http\Requests\StoreLostRequest;
-use App\Http\Requests\UpdateLostRequest;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class LostController extends Controller
 {
@@ -20,22 +18,12 @@ class LostController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreLostRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreLostRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -52,24 +40,13 @@ class LostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Lost  $lost
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Lost $lost)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateLostRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Lost  $lost
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateLostRequest $request, Lost $lost)
+    public function update(Request $request, Lost $lost)
     {
         //
     }

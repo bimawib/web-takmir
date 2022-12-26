@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\api\V1;
+namespace App\Http\Controllers;
 
 use App\Models\Found;
-use App\Http\Requests\StoreFoundRequest;
-use App\Http\Requests\UpdateFoundRequest;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class FoundController extends Controller
 {
@@ -20,22 +18,12 @@ class FoundController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreFoundRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreFoundRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -52,24 +40,13 @@ class FoundController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Found  $found
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Found $found)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateFoundRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Found  $found
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateFoundRequest $request, Found $found)
+    public function update(Request $request, Found $found)
     {
         //
     }
