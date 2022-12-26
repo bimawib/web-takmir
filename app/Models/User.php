@@ -4,6 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Blog;
+use App\Models\Lost;
+use App\Models\Found;
+use App\Models\Agenda;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -46,4 +49,14 @@ class User extends Authenticatable
     public function blog(){
         return $this->hasMany(Blog::class);
     }
+    public function lost(){
+        return $this->hasMany(Lost::class);
+    }
+    public function found(){
+        return $this->hasMany(Found::class);
+    }
+    public function agenda(){
+        return $this->hasMany(Agenda::class);
+    }
+
 }
