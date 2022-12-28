@@ -58,5 +58,8 @@ class User extends Authenticatable
     public function agenda(){
         return $this->hasMany(Agenda::class);
     }
+    public function balance(){
+        return $this->hasMany(Balance::class);
+    }
 
 }

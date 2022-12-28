@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('body');
             $table->text('image')->nullable();
+            $table->boolean('is_verified')->default(0);
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
