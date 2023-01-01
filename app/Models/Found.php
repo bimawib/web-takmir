@@ -16,7 +16,7 @@ class Found extends Model
         'slug',
         'date',
         'note',
-        'status'
+        'is_returned'
     ];
 
     public function user(){

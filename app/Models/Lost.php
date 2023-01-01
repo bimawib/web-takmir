@@ -17,7 +17,7 @@ class Lost extends Model
         'date',
         'note',
         'contact',
-        'status'
+        'is_returned'
     ];
 
     public function user(){
