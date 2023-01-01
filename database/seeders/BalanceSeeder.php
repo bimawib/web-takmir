@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Balance;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class BalanceSeeder extends Seeder
 {
@@ -14,6 +15,6 @@ class BalanceSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Balance::factory()->count(13)->create();
     }
 }
