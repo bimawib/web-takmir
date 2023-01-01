@@ -19,7 +19,7 @@ class FoundFactory extends Factory
         return [
             'user_id'=>$this->faker->numberBetween(1,3),
             'title'=>$this->faker->sentence(2),
-            'slug'=>$this->faker->slug(),
+            'slug'=>$this->faker->slug(3),
             'note'=>$this->faker->text(13),
             'contact'=>$this->faker->email(),
             'is_returned'=>$this->faker->boolean(),
