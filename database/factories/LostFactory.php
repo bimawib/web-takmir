@@ -27,10 +27,3 @@ class LostFactory extends Factory
         ];
     }
 }
-// $table->foreignId('user_id');
-//             $table->string('title');
-//             $table->string('slug');
-//             $table->string('note');
-//             $table->string('contact');
-//             $table->boolean('is_returned')->default(0);
-//             $table->datetime('date');
