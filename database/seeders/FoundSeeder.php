@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Found;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class FoundSeeder extends Seeder
 {
@@ -14,6 +15,6 @@ class FoundSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Found::factory()->count(13)->create();
     }
 }

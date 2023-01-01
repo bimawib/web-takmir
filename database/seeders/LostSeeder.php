@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Lost;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class LostSeeder extends Seeder
 {
@@ -14,6 +15,6 @@ class LostSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Lost::factory()->count(13)->create();
     }
 }
