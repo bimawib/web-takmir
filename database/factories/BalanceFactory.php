@@ -16,16 +16,14 @@ class BalanceFactory extends Factory
      */
     public function definition()
     {
-        $number_rand = rand(0,1);
+        $is_spend_rand = rand(0,1);
 
-        if($number_rand == 0){
+        if($is_spend_rand == 1){
             $spend_rand = $this->faker->numberBetween(5000,500000);
             $income_rand = 0;
-            $is_spend_rand = 1;
         } else {
             $spend_rand = 0;
             $income_rand = $this->faker->numberBetween(5000,500000);
-            $is_spend_rand = 0;
         }
 
         return [
