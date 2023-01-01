@@ -25,6 +25,7 @@ class BlogFactory extends Factory
             'title'=>$this->faker->sentence(3),
             'body'=>$this->faker->paragraph(5),
             'image'=>$this->faker->imageUrl(360, 360, 'animals', true, 'cats'),
+            'is_verified'=>$this->faker->boolean(),
             'published_at'=>$this->faker->date()
         ];
     }
