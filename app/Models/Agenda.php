@@ -18,6 +18,7 @@ class Agenda extends Model
     protected $fillable = [
         'user_id',
         'title',
+        'slug',
         'image',
         'location',
         'date'

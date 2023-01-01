@@ -18,6 +18,7 @@ return new class extends Migration
             // $table->foreignId('agenda_detail_id');
             $table->foreignId('user_id');
             $table->string('title');
+            $table->string('slug');
             $table->string('image');
             $table->string('location');
             $table->datetime('date');
