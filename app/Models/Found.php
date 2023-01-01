@@ -16,6 +16,7 @@ class Found extends Model
         'slug',
         'date',
         'note',
+        'contact',
         'is_returned'
     ];
 
