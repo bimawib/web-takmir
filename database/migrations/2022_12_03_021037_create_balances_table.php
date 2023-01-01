@@ -15,6 +15,13 @@ return new class extends Migration
     {
         Schema::create('balances', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
+            $table->string('name');
+            $table->boolean('is_spend');
+            $table->integer('spend_balance')->default(0);
+            $table->integer('incoming_balance')->default(0);
+            $table->integer('total_balance');
+            $table->string('note');
             $table->timestamps();
         });
     }

@@ -22,5 +22,5 @@ class Balance extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
-    }
+    } // fillable only to is_owner
 }
