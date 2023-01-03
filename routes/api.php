@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\V1\AgendaController;
+use App\Http\Controllers\api\V1\BalanceController;
 use App\Http\Controllers\api\V1\BlogController;
 use App\Http\Controllers\api\V1\UserController;
 
@@ -39,4 +40,5 @@ Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1'], functi
     Route::apiResource('blog',BlogController::class);
     Route::apiResource('user',UserController::class);
     Route::apiResource('agenda',AgendaController::class);
+    Route::apiResource('balance',BalanceController::class);
 });
