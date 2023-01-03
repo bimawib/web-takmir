@@ -17,7 +17,7 @@ class AgendaController extends Controller
      */
     public function index()
     {
-        //
+        return Agenda::all();
     }
 
     /**

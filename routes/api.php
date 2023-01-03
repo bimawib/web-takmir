@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\V1\AgendaController;
 use App\Http\Controllers\api\V1\BlogController;
 use App\Http\Controllers\api\V1\UserController;
 
@@ -28,9 +29,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// api/v1
+//
+// API/V1
+//
+
 Route::get('/v1/blog/slug/{slug}',[BlogController::class,'slug']); // use this for slug only
+
 Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1'], function(){
     Route::apiResource('blog',BlogController::class);
     Route::apiResource('user',UserController::class);
+    Route::apiResource('agenda',AgendaController::class);
 });
