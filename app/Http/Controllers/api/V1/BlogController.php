@@ -30,7 +30,7 @@ class BlogController extends Controller
         $queryItem = $filter->transform($request); // [['column','operator','value']]
 
         if(count($queryItem)==0){
-            return new BlogCollection(Blog::paginate(5));
+            return new BlogCollection(Blog::where('is_verified',1)->paginate(5));
         } else {
             return new BlogCollection(Blog::where($queryItem)->paginate(5));
         }
