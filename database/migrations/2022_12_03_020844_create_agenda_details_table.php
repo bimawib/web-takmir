@@ -19,8 +19,8 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->string('location');
-            $table->string('keynote_speaker');
-            $table->string('note');
+            $table->string('keynote_speaker')->nullable();
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }

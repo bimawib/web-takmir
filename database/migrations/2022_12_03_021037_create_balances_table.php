@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->string('name');
             $table->boolean('is_spend');
-            $table->integer('spend_balance')->default(0);
-            $table->integer('incoming_balance')->default(0);
+            $table->integer('spend_balance')->default(0)->nullable();
+            $table->integer('incoming_balance')->default(0)->nullable();
             $table->integer('total_balance');
-            $table->string('note');
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }
