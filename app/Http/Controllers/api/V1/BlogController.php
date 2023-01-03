@@ -82,6 +82,7 @@ class BlogController extends Controller
     {
         //
     }
+    
     public function slug($slug){
         $blog = Blog::where('slug',$slug)->first();
         return new BlogResource($blog);

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAgendaRequest;
 use App\Http\Requests\UpdateAgendaRequest;
+use App\Http\Resources\V1\AgendaCollection;
+use App\Http\Resources\V1\AgendaResource;
 
 class AgendaController extends Controller
 {
@@ -15,9 +17,9 @@ class AgendaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Agenda::all();
+        return new AgendaCollection(Agenda::paginate(5));
     }
 
     /**
