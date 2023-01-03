@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\V1;
 
 use App\Models\Found;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFoundRequest;
+use App\Http\Requests\UpdateFoundRequest;
 
 class FoundController extends Controller
 {
