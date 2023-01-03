@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('balances', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->boolean('is_admin')->default(0);
-            $table->boolean('is_owner')->default(0);
-            $table->rememberToken();
+            $table->boolean('is_spend');
+            $table->integer('spend_balance')->default(0)->nullable();
+            $table->integer('incoming_balance')->default(0)->nullable();
+            $table->integer('total_balance');
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('balances');
     }
 };
