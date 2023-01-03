@@ -1,5 +1,11 @@
 <?php
 
+// namespace App\Http\Controllers;
+
+// use App\Models\Blog;
+// use Illuminate\Http\Request;
+// use App\Http\Resources\V1\BlogResource;
+
 namespace App\Http\Controllers\api\V1;
 
 use App\Models\Blog;
@@ -20,7 +26,6 @@ class BlogController extends Controller
      */
     public function index(Request $request)
     {
-        
         $filter = new BlogFilter();
         $queryItem = $filter->transform($request); // [['column','operator','value']]
 
@@ -31,26 +36,15 @@ class BlogController extends Controller
         }
 
         // Blog::where()->with('user'); // kayanya setelah update terbaru with user ini bisa langsung dipake tanpa dipanggil wkwkkwawkoawkooawk
-        
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreBlogRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreBlogRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -63,28 +57,17 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        return new BlogResource($blog);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Blog  $blog
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Blog $blog)
-    {
         //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateBlogRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateBlogRequest $request, Blog $blog)
+    public function update(Request $request, Blog $blog)
     {
         //
     }
@@ -99,7 +82,6 @@ class BlogController extends Controller
     {
         //
     }
-
     public function slug($slug){
         $blog = Blog::where('slug',$slug)->first();
         return new BlogResource($blog);
