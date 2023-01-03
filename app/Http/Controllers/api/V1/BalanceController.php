@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\api\V1;
 
 use App\Models\Balance;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBalanceRequest;
 use App\Http\Requests\UpdateBalanceRequest;
-use App\Http\Controllers\Controller;
 
 class BalanceController extends Controller
 {
@@ -20,22 +21,12 @@ class BalanceController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreBalanceRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreBalanceRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -52,24 +43,13 @@ class BalanceController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Balance  $balance
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Balance $balance)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateBalanceRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Balance  $balance
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateBalanceRequest $request, Balance $balance)
+    public function update(Request $request, Balance $balance)
     {
         //
     }
