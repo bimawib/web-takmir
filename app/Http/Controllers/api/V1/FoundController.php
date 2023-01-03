@@ -17,7 +17,7 @@ class FoundController extends Controller
      */
     public function index()
     {
-        //
+        return Found::all();
     }
 
     /**

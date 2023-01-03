@@ -41,4 +41,6 @@ Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1'], functi
     Route::apiResource('user',UserController::class);
     Route::apiResource('agenda',AgendaController::class);
     Route::apiResource('balance',BalanceController::class);
+    Route::apiResource('found',FoundController::class);
+    Route::apiResource('lost',LostController::class);
 });

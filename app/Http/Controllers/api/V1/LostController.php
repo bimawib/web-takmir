@@ -17,7 +17,7 @@ class LostController extends Controller
      */
     public function index()
     {
-        //
+        return Lost::all();
     }
 
     /**
