@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\api\V1;
 
 use App\Models\AgendaDetail;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAgendaDetailRequest;
 use App\Http\Requests\UpdateAgendaDetailRequest;
-use App\Http\Controllers\Controller;
 
 class AgendaDetailController extends Controller
 {
@@ -20,22 +21,12 @@ class AgendaDetailController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreAgendaDetailRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAgendaDetailRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -52,24 +43,13 @@ class AgendaDetailController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\AgendaDetail  $agendaDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(AgendaDetail $agendaDetail)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateAgendaDetailRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\AgendaDetail  $agendaDetail
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAgendaDetailRequest $request, AgendaDetail $agendaDetail)
+    public function update(Request $request, AgendaDetail $agendaDetail)
     {
         //
     }
