@@ -22,6 +22,7 @@ class BlogFilter extends ApiFilter {
         'lte'=>'<=',
         'gt'=>'>',
         'gte'=>'>=',
+        'ne'=>'!=',
         'like'=>'like'
     ];
 

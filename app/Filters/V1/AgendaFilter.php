@@ -22,6 +22,7 @@ class AgendaFilter extends ApiFilter {
         'lte'=>'<=',
         'gt'=>'>',
         'gte'=>'>=',
+        'ne'=>'!=',
         'like'=>'like'
     ];
 
