@@ -27,7 +27,7 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         $filter = new BlogFilter();
-        $queryItem = $filter->transform($request); // [['column','operator','value']]
+        $queryItem = $filter->transform($request); // [['column','operator','value']], ex = ('title','like','puasa')
 
         if(count($queryItem)==0){
             return new BlogCollection(Blog::where('is_verified',1)->paginate(5));

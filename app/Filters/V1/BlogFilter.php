@@ -31,6 +31,8 @@ class BlogFilter extends ApiFilter {
         foreach ($this->allowedParam as $param => $operators){
             $query = $request->query($param);
 
+                // dd($request->query);
+
             if(!isset($query)){
                 continue;
             }
