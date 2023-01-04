@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 class ApiFilter {
     protected $allowedParam = [];
 
-    // protected $columnMap = [
-    //     'agendaDate'=>'agenda_date'
-    // ];
+    protected $columnMap = [];
 
     protected $operatorMap = [];
 
@@ -23,12 +21,16 @@ class ApiFilter {
                 continue;
             }
 
-            // $column = $this->columnMap[$param] ?? $param;
-            $column = $param;
+            $column = $this->columnMap[$param] ?? $param;
+            // $column = $param;
 
             foreach ($operators as $operator){
                 if (isset($query[$operator])){
-                    $eloQuery[] = [$column, $this->operatorMap[$operator], $query[$operator]];
+                    if($operator == 'like'){
+                        $eloQuery[] = [$column, $this->operatorMap[$operator], '%'.$query[$operator].'%'];
+                    } else {
+                        $eloQuery[] = [$column, $this->operatorMap[$operator], $query[$operator]];
+                    }
                 }
             }
         }

@@ -11,9 +11,9 @@ class AgendaFilter extends ApiFilter {
         'slug'=>['eq'],
     ];
 
-    // protected $columnMap = [
-    //     'agendaDate'=>'agenda_date'
-    // ];
+    protected $columnMap = [
+        'publishedAt'=>'published_at'
+    ];
     // this is for a query that has different typing than the column name in DB
 
     protected $operatorMap = [
@@ -24,36 +24,5 @@ class AgendaFilter extends ApiFilter {
         'gte'=>'>=',
         'like'=>'like'
     ];
-
-    public function transform(Request $request){
-        $eloQuery = [];
-
-        foreach ($this->allowedParam as $param => $operators){
-            $query = $request->query($param);
-
-                // dd($request->query);
-
-            if(!isset($query)){
-                continue;
-            }
-
-            // $column = $this->columnMap[$param] ?? $param;
-            $column = $param;
-
-            
-
-            foreach ($operators as $operator){
-                if (isset($query[$operator])){
-                    if($operator == 'like'){
-                        $eloQuery[] = [$column, $this->operatorMap[$operator], '%'.$query[$operator].'%'];
-                    } else {
-                        $eloQuery[] = [$column, $this->operatorMap[$operator], $query[$operator]];
-                    }
-                }
-            }
-        }
-
-        return $eloQuery;
-    }
 
 }
