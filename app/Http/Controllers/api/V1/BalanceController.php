@@ -41,7 +41,7 @@ class BalanceController extends Controller
      */
     public function show(Balance $balance)
     {
-        //
+        return new BalanceResource($balance);
     }
 
     /**

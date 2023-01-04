@@ -6,7 +6,9 @@ use App\Models\Found;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFoundRequest;
+use App\Http\Resources\V1\FoundResource;
 use App\Http\Requests\UpdateFoundRequest;
+use App\Http\Resources\V1\FoundCollection;
 
 class FoundController extends Controller
 {
@@ -17,7 +19,7 @@ class FoundController extends Controller
      */
     public function index()
     {
-        return Found::all();
+        return new FoundCollection(Found::paginate(5));
     }
 
     /**
@@ -39,7 +41,7 @@ class FoundController extends Controller
      */
     public function show(Found $found)
     {
-        //
+        return new FoundResource($found);
     }
 
     /**

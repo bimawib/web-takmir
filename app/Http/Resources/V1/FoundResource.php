@@ -16,6 +16,13 @@ class FoundResource extends JsonResource
     {
         return [
             'id'=>$this->id,
+            'name'=>$this->user->name,
+            'title'=>$this->title,
+            'slug'=>$this->slug,
+            'note'=>$this->note,
+            'contact'=>$this->contact,
+            'isReturned'=>$this->is_returned,
+            'date'=>$this->date
         ];
     }
 }
