@@ -16,8 +16,8 @@ class BalanceResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'enumeratorName'=>$this->user->name,
-            'name'=>$this->name,
+            'name'=>$this->user->name,
+            'title'=>$this->title,
             'note'=>$this->note,
             'isSpend'=>$this->is_spend,
             'spendBalance'=>$this->spend_balance,

@@ -28,7 +28,7 @@ class BalanceFactory extends Factory
 
         return [
             'user_id'=>$this->faker->numberBetween(1,3),
-            'name'=>fake()->word(),
+            'title'=>fake()->word(),
             'is_spend'=>$is_spend_rand,
             'spend_balance'=>$spend_rand,
             'incoming_balance'=>$income_rand,
