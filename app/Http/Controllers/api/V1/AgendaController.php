@@ -26,7 +26,9 @@ class AgendaController extends Controller
         if(count($queryItems) == 0){
             return new AgendaCollection(Agenda::paginate(5));
         } else {
-            return new AgendaCollection(Agenda::where($queryItems)->paginate(5));
+            $agenda = Agenda::where($queryItems)->paginate(5);
+
+            return new AgendaCollection($agenda->appends($request->query()));
         }
         
     }

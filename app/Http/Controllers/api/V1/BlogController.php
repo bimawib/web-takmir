@@ -30,9 +30,11 @@ class BlogController extends Controller
         $queryItem = $filter->transform($request); // [['column','operator','value']], ex = ('title','like','puasa')
 
         if(count($queryItem)==0){
-            return new BlogCollection(Blog::where('is_verified',1)->paginate(5));
+            return new BlogCollection(Blog::where('is_verified',1)->paginate(7));
         } else {
-            return new BlogCollection(Blog::where($queryItem)->paginate(5));
+            $blogs = Blog::where($queryItem)->paginate(7);
+
+            return new BlogCollection($blogs->appends($request->query()));
         }
 
         // Blog::where()->with('user'); // kayanya setelah update terbaru with user ini bisa langsung dipake tanpa dipanggil wkwkkwawkoawkooawk
