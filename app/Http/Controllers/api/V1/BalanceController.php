@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBalanceRequest;
 use App\Http\Requests\UpdateBalanceRequest;
+use App\Http\Resources\V1\BalanceCollection;
+use App\Http\Resources\V1\BalanceResource;
 
 class BalanceController extends Controller
 {
@@ -17,7 +19,7 @@ class BalanceController extends Controller
      */
     public function index()
     {
-        return Balance::all();
+        return new BalanceCollection(Balance::paginate(5));
     }
 
     /**

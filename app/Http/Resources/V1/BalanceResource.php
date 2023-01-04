@@ -14,6 +14,16 @@ class BalanceResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id'=>$this->id,
+            'enumeratorName'=>$this->user->name,
+            'name'=>$this->name,
+            'note'=>$this->note,
+            'isSpend'=>$this->is_spend,
+            'spendBalance'=>$this->spend_balance,
+            'incomingBalance'=>$this->incoming_balance,
+            'totalBalance'=>$this->total_balance,
+            'createdAt'=>$this->created_at
+        ];
     }
 }
