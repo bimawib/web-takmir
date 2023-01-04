@@ -42,6 +42,8 @@ class AgendaController extends Controller
     public function show(Agenda $agenda)
     {
         return new AgendaResource($agenda);
+        // should use slug instead for public reading
+        
     }
 
     /**
