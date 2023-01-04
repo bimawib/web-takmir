@@ -14,6 +14,15 @@ class LostResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id'=>$this->id,
+            'name'=>$this->user->name,
+            'title'=>$this->title,
+            'slug'=>$this->slug,
+            'note'=>$this->note,
+            'contact'=>$this->contact,
+            'isReturned'=>$this->is_returned,
+            'lostDate'=>$this->date
+        ];
     }
 }

@@ -22,7 +22,7 @@ class FoundResource extends JsonResource
             'note'=>$this->note,
             'contact'=>$this->contact,
             'isReturned'=>$this->is_returned,
-            'date'=>$this->date
+            'foundDate'=>$this->date
         ];
     }
 }
