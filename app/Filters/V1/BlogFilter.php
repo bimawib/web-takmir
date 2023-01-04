@@ -7,10 +7,9 @@ use App\Filters\ApiFilter;
 
 class BlogFilter extends ApiFilter {
     protected $allowedParam = [
-        'title'=>['eq'],
-        'body'=>['eq'],
+        'title'=>['eq','like'],
+        'body'=>['eq','like'],
         'slug'=>['eq'],
-        'name'=>['eq']
     ];
 
     // protected $columnMap = [
@@ -22,7 +21,8 @@ class BlogFilter extends ApiFilter {
         'lt'=>'<',
         'lte'=>'<=',
         'gt'=>'>',
-        'gte'=>'>='
+        'gte'=>'>=',
+        'like'=>'like'
     ];
 
     public function transform(Request $request){
@@ -38,9 +38,15 @@ class BlogFilter extends ApiFilter {
             // $column = $this->columnMap[$param] ?? $param;
             $column = $param;
 
+            
+
             foreach ($operators as $operator){
                 if (isset($query[$operator])){
-                    $eloQuery[] = [$column, $this->operatorMap[$operator], $query[$operator]];
+                    if($operator == 'like'){
+                        $eloQuery[] = [$column, $this->operatorMap[$operator], '%'.$query[$operator].'%'];
+                    } else {
+                        $eloQuery[] = [$column, $this->operatorMap[$operator], $query[$operator]];
+                    }
                 }
             }
         }
