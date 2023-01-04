@@ -14,6 +14,7 @@ class AgendaFilter extends ApiFilter {
     // protected $columnMap = [
     //     'agendaDate'=>'agenda_date'
     // ];
+    // this is for a query that has different typing than the column name in DB
 
     protected $operatorMap = [
         'eq'=>'=',
