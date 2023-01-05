@@ -3,6 +3,7 @@
 namespace App\Http\Resources\V1;
 
 use App\Models\Agenda;
+use App\Http\Resources\V1\AgendaDetailResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AgendaResource extends JsonResource
@@ -23,7 +24,9 @@ class AgendaResource extends JsonResource
             'location'=>$this->location,
             'date'=>$this->date,
             'image'=>$this->image,
-            'agendaDetail'=>$this->agenda_detail
+            'agendaDetail'=>AgendaDetailResource::collection($this->whenLoaded('agenda_detail'))
         ];
     }
 }
+// whenLoaded hanya akan dipanggil kalau relasi sudah dipanggil di instance (di kasus ini instance $agenda)
+// for show method always include relation for agenda_detail

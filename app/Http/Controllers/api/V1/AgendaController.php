@@ -23,14 +23,14 @@ class AgendaController extends Controller
         $filter = new AgendaFilter();
         $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
 
-        if(count($queryItems) == 0){
-            return new AgendaCollection(Agenda::paginate(5));
-        } else {
-            $agenda = Agenda::where($queryItems)->paginate(5);
+        $includeDetails = $request->query('includeDetails');
+        $agenda = Agenda::where($queryItems);
 
-            return new AgendaCollection($agenda->appends($request->query()));
+        if($includeDetails){
+            $agenda = $agenda->with('agenda_detail');
         }
-        
+
+        return new AgendaCollection($agenda->paginate()->appends($request->query()));
     }
 
     /**
