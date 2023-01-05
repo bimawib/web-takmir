@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLostRequest;
 use App\Http\Requests\UpdateLostRequest;
+use App\Http\Resources\V1\LostCollection;
+use App\Http\Resources\V1\LostResource;
 
 class LostController extends Controller
 {
@@ -17,7 +19,7 @@ class LostController extends Controller
      */
     public function index()
     {
-        return Lost::all();
+        return new LostCollection(Lost::paginate(5));
     }
 
     /**
@@ -39,7 +41,7 @@ class LostController extends Controller
      */
     public function show(Lost $lost)
     {
-        //
+        return new LostResource($lost);
     }
 
     /**

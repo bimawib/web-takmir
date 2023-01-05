@@ -5,16 +5,16 @@ namespace App\Filters\V1;
 use Illuminate\Http\Request;
 use App\Filters\ApiFilter;
 
-class BlogFilter extends ApiFilter {
+class AgendaFilter extends ApiFilter {
     protected $allowedParam = [
         'title'=>['eq','like'],
-        'body'=>['eq','like'],
         'slug'=>['eq'],
     ];
 
     protected $columnMap = [
-        // 'isVerified'=>'is_verified'
+        'publishedAt'=>'published_at'
     ];
+    // this is for a query that has different typing than the column name in DB
 
     protected $operatorMap = [
         'eq'=>'=',

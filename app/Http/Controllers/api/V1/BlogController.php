@@ -27,12 +27,14 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         $filter = new BlogFilter();
-        $queryItem = $filter->transform($request); // [['column','operator','value']]
+        $queryItem = $filter->transform($request); // [['column','operator','value']], ex = ('title','like','puasa')
 
         if(count($queryItem)==0){
-            return new BlogCollection(Blog::where('is_verified',1)->paginate(5));
+            return new BlogCollection(Blog::where('is_verified',1)->paginate());
         } else {
-            return new BlogCollection(Blog::where($queryItem)->paginate(5));
+            $blogs = Blog::where($queryItem)->paginate();
+
+            return new BlogCollection($blogs->appends($request->query()));
         }
 
         // Blog::where()->with('user'); // kayanya setelah update terbaru with user ini bisa langsung dipake tanpa dipanggil wkwkkwawkoawkooawk
@@ -57,7 +59,8 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        //
+        // return new BlogResource($blog);
+        // should use slug instead for public reading
     }
 
     /**
@@ -82,6 +85,7 @@ class BlogController extends Controller
     {
         //
     }
+    
     public function slug($slug){
         $blog = Blog::where('slug',$slug)->first();
         return new BlogResource($blog);

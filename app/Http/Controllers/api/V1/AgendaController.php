@@ -4,9 +4,12 @@ namespace App\Http\Controllers\api\V1;
 
 use App\Models\Agenda;
 use Illuminate\Http\Request;
+use App\Filters\V1\AgendaFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAgendaRequest;
+use App\Http\Resources\V1\AgendaResource;
 use App\Http\Requests\UpdateAgendaRequest;
+use App\Http\Resources\V1\AgendaCollection;
 
 class AgendaController extends Controller
 {
@@ -15,9 +18,19 @@ class AgendaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Agenda::all();
+        $filter = new AgendaFilter();
+        $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
+
+        $includeDetails = $request->query('includeDetails');
+        $agenda = Agenda::where($queryItems);
+
+        if($includeDetails){
+            $agenda = $agenda->with('agenda_detail');
+        }
+
+        return new AgendaCollection($agenda->paginate()->appends($request->query()));
     }
 
     /**
@@ -39,7 +52,9 @@ class AgendaController extends Controller
      */
     public function show(Agenda $agenda)
     {
-        //
+        return new AgendaResource($agenda);
+        // should use slug instead for public reading
+        
     }
 
     /**

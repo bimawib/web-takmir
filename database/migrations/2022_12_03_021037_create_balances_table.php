@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('balances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->string('name');
+            $table->string('title');
             $table->boolean('is_spend');
             $table->integer('spend_balance')->default(0)->nullable();
             $table->integer('incoming_balance')->default(0)->nullable();

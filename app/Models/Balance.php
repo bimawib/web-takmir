@@ -12,7 +12,7 @@ class Balance extends Model
 
     protected $fillable = [
         'user_id',
-        'name',
+        'title',
         'is_spend',
         'spend_balance',
         'incoming_balance',
