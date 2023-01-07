@@ -4,11 +4,12 @@ namespace App\Http\Controllers\api\V1;
 
 use App\Models\Lost;
 use Illuminate\Http\Request;
+use App\Filters\V1\LostFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLostRequest;
+use App\Http\Resources\V1\LostResource;
 use App\Http\Requests\UpdateLostRequest;
 use App\Http\Resources\V1\LostCollection;
-use App\Http\Resources\V1\LostResource;
 
 class LostController extends Controller
 {
@@ -17,9 +18,23 @@ class LostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new LostCollection(Lost::paginate());
+        $filter = new LostFilter();
+        $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
+
+        $isReturned = $request->query('isReturned');
+        $Lost = Lost::where($queryItems);
+
+        // dd(isset($isReturned));
+
+        if(!isset($isReturned)){
+            return new LostCollection($Lost->paginate()->appends($request->query()));
+        } elseif($isReturned == 0){
+            return new LostCollection($Lost->where('is_returned',0)->paginate()->appends($request->query()));
+        } elseif($isReturned == 1){
+            return new LostCollection($Lost->where('is_returned',1)->paginate()->appends($request->query()));
+        }
     }
 
     /**
