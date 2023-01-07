@@ -32,7 +32,7 @@ class BlogController extends Controller
         if(count($queryItem)==0){
             return new BlogCollection(Blog::where('is_verified',1)->paginate());
         } else {
-            $blogs = Blog::where($queryItem)->paginate();
+            $blogs = Blog::where($queryItem)->where('is_verified',1)->paginate();
 
             return new BlogCollection($blogs->appends($request->query()));
         }
@@ -59,7 +59,7 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        // return new BlogResource($blog);
+        return new BlogResource($blog);
         // should use slug instead for public reading
     }
 

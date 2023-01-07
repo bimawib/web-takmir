@@ -15,6 +15,11 @@ class Agenda extends Model
     //     'date'=>'d-m-Y'
     // ];
 
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     protected $fillable = [
         'user_id',
         'title',

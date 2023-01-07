@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\V1;
 
 use App\Models\Found;
 use Illuminate\Http\Request;
+use App\Filters\V1\FoundFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFoundRequest;
 use App\Http\Resources\V1\FoundResource;
@@ -17,9 +18,24 @@ class FoundController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new FoundCollection(Found::paginate(5));
+        $filter = new FoundFilter();
+        $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
+
+        $isReturned = $request->query('isReturned');
+        $Found = Found::where($queryItems);
+
+        // dd(isset($isReturned));
+
+        if(!isset($isReturned)){
+            return new FoundCollection($Found->paginate()->appends($request->query()));
+        } elseif($isReturned == 0){
+            return new FoundCollection($Found->where('is_returned',0)->paginate()->appends($request->query()));
+        } elseif($isReturned == 1){
+            return new FoundCollection($Found->where('is_returned',1)->paginate()->appends($request->query()));
+        }
+
     }
 
     /**
