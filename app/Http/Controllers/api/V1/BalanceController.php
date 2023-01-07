@@ -19,7 +19,7 @@ class BalanceController extends Controller
      */
     public function index()
     {
-        return new BalanceCollection(Balance::paginate(5));
+        return new BalanceCollection(Balance::paginate());
     }
 
     /**

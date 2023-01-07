@@ -19,7 +19,7 @@ class LostController extends Controller
      */
     public function index()
     {
-        return new LostCollection(Lost::paginate(5));
+        return new LostCollection(Lost::paginate());
     }
 
     /**
