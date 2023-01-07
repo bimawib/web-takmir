@@ -4,11 +4,12 @@ namespace App\Http\Controllers\api\V1;
 
 use App\Models\Balance;
 use Illuminate\Http\Request;
+use App\Filters\V1\BalanceFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBalanceRequest;
+use App\Http\Resources\V1\BalanceResource;
 use App\Http\Requests\UpdateBalanceRequest;
 use App\Http\Resources\V1\BalanceCollection;
-use App\Http\Resources\V1\BalanceResource;
 
 class BalanceController extends Controller
 {
@@ -17,9 +18,35 @@ class BalanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new BalanceCollection(Balance::paginate());
+        $filter = new BalanceFilter();
+        $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
+
+        $Balance = Balance::where($queryItems);
+        $sortBy = $request['sortBy'];
+
+        $columnMap = [
+            'spendBalance'=>'spend_balance',
+            'incomingBalance'=>'incoming_balance',
+            'totalBalance'=>'total_balance'
+        ];
+
+        if(isset($sortBy['asc'])){
+            foreach($columnMap as $fromQuery => $toTable){
+                if($sortBy['asc'] == $fromQuery){
+                    return new BalanceCollection($Balance->orderBy($toTable,'asc')->paginate()->appends($request->query()));
+                }
+            }
+        } elseif(isset($sortBy['desc'])){
+            foreach($columnMap as $fromQuery => $toTable){
+                if($sortBy['desc'] == $fromQuery){
+                    return new BalanceCollection($Balance->orderBy($toTable,'desc')->paginate()->appends($request->query()));
+                }
+            }
+        }
+
+        return new BalanceCollection($Balance->paginate()->appends($request->query()));
     }
 
     /**
@@ -66,4 +93,8 @@ class BalanceController extends Controller
     {
         //
     }
+
+    public function latestBalance(){
+
+    } // this is for public consumption
 }
