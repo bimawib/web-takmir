@@ -8,7 +8,6 @@ use App\Filters\ApiFilter;
 class BlogFilter extends ApiFilter {
     protected $allowedParam = [
         'title'=>['eq','like'],
-        'body'=>['eq','like'],
         'slug'=>['eq'],
     ];
 
