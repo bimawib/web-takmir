@@ -37,6 +37,8 @@ class BlogController extends Controller
             return new BlogCollection($blogs->appends($request->query()));
         }
 
+        // gonna make 1 condition flow for admin and owner so they can see unverified blog
+
         // Blog::where()->with('user'); // kayanya setelah update terbaru with user ini bisa langsung dipake tanpa dipanggil wkwkkwawkoawkooawk
     }
 
