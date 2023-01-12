@@ -28,12 +28,12 @@ class FoundController extends Controller
 
         // dd(isset($isReturned));
 
-        if(!isset($isReturned)){
-            return new FoundCollection($Found->paginate()->appends($request->query()));
-        } elseif($isReturned == 0){
+        if(isset($isReturned) && $isReturned == 0){
             return new FoundCollection($Found->where('is_returned',0)->paginate()->appends($request->query()));
-        } elseif($isReturned == 1){
+        } elseif(isset($isReturned) && $isReturned == 1){
             return new FoundCollection($Found->where('is_returned',1)->paginate()->appends($request->query()));
+        } else {
+            return new FoundCollection($Found->paginate()->appends($request->query()));
         }
 
     }
