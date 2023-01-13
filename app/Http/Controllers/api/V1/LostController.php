@@ -27,9 +27,14 @@ class LostController extends Controller
         $Lost = Lost::where($queryItems);
 
         // dd(isset($isReturned));
-        
-        return new LostCollection($Lost->paginate()->appends($request->query()));
-        
+
+        if(isset($isReturned) && $isReturned == 0){
+            return new LostCollection($Lost->where('is_returned',0)->paginate()->appends($request->query()));
+        } elseif(isset($isReturned) && $isReturned == 1){
+            return new LostCollection($Lost->where('is_returned',1)->paginate()->appends($request->query()));
+        } else {
+            return new LostCollection($Lost->paginate()->appends($request->query()));
+        }
     }
 
     /**

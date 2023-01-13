@@ -9,7 +9,6 @@ class FoundFilter extends ApiFilter {
     protected $allowedParam = [
         'title'=>['eq','like'],
         'slug'=>['eq'],
-        'isReturned'=>['eq']
     ];
 
     protected $columnMap = [
