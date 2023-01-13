@@ -26,7 +26,7 @@ class AgendaController extends Controller
         $includeDetails = $request->query('includeDetails');
         $agenda = Agenda::where($queryItems);
 
-        if($includeDetails){
+        if(isset($includeDetails) && $includeDetails == 1){
             $agenda = $agenda->with('agenda_detail');
         }
 
