@@ -69,9 +69,16 @@ class LostController extends Controller
      * @param  \App\Models\Lost  $lost
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lost $lost)
+    public function update(UpdateLostRequest $request, Lost $lost)
     {
-        //
+        $slug = $lost->slug;
+        if(isset($request->slug) && $slug != $request->slug){
+            $request->validate([
+                'slug'=>'required|unique:losts|max:255'
+            ]);
+        }
+
+        $lost->update($request->all());
     }
 
     /**

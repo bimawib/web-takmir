@@ -70,9 +70,16 @@ class FoundController extends Controller
      * @param  \App\Models\Found  $found
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Found $found)
+    public function update(UpdateFoundRequest $request, Found $found)
     {
-        //
+        $slug = $found->slug;
+        if(isset($request->slug) && $slug != $request->slug){
+            $request->validate([
+                'slug'=>'required|unique:founds|max:255'
+            ]);
+        }
+
+        $found->update($request->all());
     }
 
     /**
