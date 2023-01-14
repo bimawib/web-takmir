@@ -7,6 +7,7 @@ use App\Http\Controllers\api\V1\AgendaController;
 use App\Http\Controllers\api\V1\BalanceController;
 use App\Http\Controllers\api\V1\BlogController;
 use App\Http\Controllers\api\V1\UserController;
+use App\Http\Controllers\SanctumTestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,8 @@ Route::group(['middleware'=>['auth:sanctum']], function () {
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/sanctumtest',[SanctumTestController::class,'index'])->middleware('auth:sanctum');
 
 //
 // API/V1
