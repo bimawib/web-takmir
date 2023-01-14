@@ -27,7 +27,7 @@ class StoreFoundRequest extends FormRequest
             'title'=>'required|max:255',
             'slug'=>'required|unique:founds|max:255',
             'note'=>'required|max:255',
-            'contact'=>'required|max:255',
+            'contact'=>'required|numeric',
             'date'=>'required|date_format:Y-m-d H:i:s',
         ];
     }

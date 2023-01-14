@@ -43,9 +43,12 @@ class LostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreLostRequest $request)
     {
-        //
+        $request['user_id'] = 14; // auth('sanctum')->user()->id;
+        $request['is_returned']=0;
+
+        return new LostResource(Lost::create($request->all()));
     }
 
     /**
