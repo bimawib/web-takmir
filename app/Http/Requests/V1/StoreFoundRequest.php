@@ -13,7 +13,7 @@ class StoreFoundRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,17 @@ class StoreFoundRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title'=>'required|max:255',
+            'slug'=>'required|unique:founds|max:255',
+            'note'=>'required|max:255',
+            'contact'=>'required|max:255',
+            'date'=>'required|date_format:Y-m-d H:i:s',
         ];
+    }
+
+    protected function prepareForValidation(){
+        $this->merge([
+            'is_returned'=>$this->isReturned
+        ]);
     }
 }

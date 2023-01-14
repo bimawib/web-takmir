@@ -38,11 +38,3 @@ class StoreBlogRequest extends FormRequest
         ]);
     }
 }
-
-// protected $fillable = [
-//     'user_id',
-//     'title',
-//     'slug',
-//     'body',
-//     'image' 'image'=>'image|file|max:1024',
-// ];
