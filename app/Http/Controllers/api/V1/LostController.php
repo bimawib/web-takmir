@@ -6,9 +6,9 @@ use App\Models\Lost;
 use Illuminate\Http\Request;
 use App\Filters\V1\LostFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreLostRequest;
+use App\Http\Requests\V1\StoreLostRequest;
 use App\Http\Resources\V1\LostResource;
-use App\Http\Requests\UpdateLostRequest;
+use App\Http\Requests\V1\UpdateLostRequest;
 use App\Http\Resources\V1\LostCollection;
 
 class LostController extends Controller

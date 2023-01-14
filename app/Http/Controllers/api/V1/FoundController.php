@@ -6,9 +6,9 @@ use App\Models\Found;
 use Illuminate\Http\Request;
 use App\Filters\V1\FoundFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreFoundRequest;
+use App\Http\Requests\V1\StoreFoundRequest;
 use App\Http\Resources\V1\FoundResource;
-use App\Http\Requests\UpdateFoundRequest;
+use App\Http\Requests\V1\UpdateFoundRequest;
 use App\Http\Resources\V1\FoundCollection;
 
 class FoundController extends Controller

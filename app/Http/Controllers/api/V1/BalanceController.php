@@ -6,9 +6,9 @@ use App\Models\Balance;
 use Illuminate\Http\Request;
 use App\Filters\V1\BalanceFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreBalanceRequest;
+use App\Http\Requests\V1\StoreBalanceRequest;
 use App\Http\Resources\V1\BalanceResource;
-use App\Http\Requests\UpdateBalanceRequest;
+use App\Http\Requests\V1\UpdateBalanceRequest;
 use App\Http\Resources\V1\BalanceCollection;
 
 class BalanceController extends Controller

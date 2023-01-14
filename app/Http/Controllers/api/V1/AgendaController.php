@@ -6,9 +6,9 @@ use App\Models\Agenda;
 use Illuminate\Http\Request;
 use App\Filters\V1\AgendaFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreAgendaRequest;
+use App\Http\Requests\V1\StoreAgendaRequest;
 use App\Http\Resources\V1\AgendaResource;
-use App\Http\Requests\UpdateAgendaRequest;
+use App\Http\Requests\V1\UpdateAgendaRequest;
 use App\Http\Resources\V1\AgendaCollection;
 
 class AgendaController extends Controller
