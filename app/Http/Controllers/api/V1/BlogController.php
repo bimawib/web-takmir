@@ -11,7 +11,7 @@ namespace App\Http\Controllers\api\V1;
 use App\Models\Blog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreBlogRequest;
+use App\Http\Requests\V1\StoreBlogRequest;
 use App\Http\Resources\V1\BlogResource;
 use App\Http\Requests\UpdateBlogRequest;
 use App\Http\Resources\V1\BlogCollection;
@@ -48,9 +48,9 @@ class BlogController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreBlogRequest $request)
     {
-        //
+        return new BlogResource(Blog::create($request->all()));
     }
 
     /**
