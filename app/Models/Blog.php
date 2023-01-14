@@ -15,7 +15,8 @@ class Blog extends Model
         'title',
         'slug',
         'body',
-        'image'
+        'image',
+        'published_at'
     ];
 
     public function getRouteKeyName()

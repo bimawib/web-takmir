@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreBlogRequest;
 use App\Http\Resources\V1\BlogResource;
-use App\Http\Requests\UpdateBlogRequest;
+use App\Http\Requests\V1\UpdateBlogRequest;
 use App\Http\Resources\V1\BlogCollection;
 use App\Filters\V1\BlogFilter;
 
@@ -50,6 +50,9 @@ class BlogController extends Controller
      */
     public function store(StoreBlogRequest $request)
     {
+        $request['user_id'] = 14;
+        // auth('sanctum')->user()->id;
+
         return new BlogResource(Blog::create($request->all()));
     }
 
