@@ -6,6 +6,7 @@ use App\Http\Controllers\api\V1\AuthController;
 use App\Http\Controllers\api\V1\AgendaController;
 use App\Http\Controllers\api\V1\BalanceController;
 use App\Http\Controllers\api\V1\BlogController;
+use App\Http\Controllers\api\V1\FoundController;
 use App\Http\Controllers\api\V1\UserController;
 use App\Http\Controllers\SanctumTestController;
 
@@ -40,6 +41,8 @@ Route::get('/sanctumtest',[SanctumTestController::class,'index'])->middleware('a
 Route::get('/v1/blog/slug/{slug}',[BlogController::class,'slug']); // use this for slug only
 
 Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1'], function(){
+    Route::post('found/bulk',[FoundController::class,'bulkStore']);
+
     Route::apiResource('blog',BlogController::class);
     Route::apiResource('user',UserController::class);
     Route::apiResource('agenda',AgendaController::class);

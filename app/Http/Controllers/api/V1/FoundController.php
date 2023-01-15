@@ -10,6 +10,8 @@ use App\Http\Requests\V1\StoreFoundRequest;
 use App\Http\Resources\V1\FoundResource;
 use App\Http\Requests\V1\UpdateFoundRequest;
 use App\Http\Resources\V1\FoundCollection;
+use Illuminate\Support\Arr;
+use App\Http\Requests\V1\BulkStoreFoundRequest;
 
 class FoundController extends Controller
 {
@@ -50,6 +52,27 @@ class FoundController extends Controller
         $request['is_returned']=0;
 
         return new FoundResource(Found::create($request->all()));
+    }
+
+    public function bulkStore(BulkStoreFoundRequest $request){
+        
+        $arrayRequest = $request->toArray();
+        $arrayCount = count($arrayRequest);
+
+        $other_input = [];
+        foreach($request->toArray() as $req){
+            $req['user_id'] = 13; // auth('sanctum')->user()->id;
+            $req['created_at'] = now();
+            $other_input[] = $req;
+        }
+        $request->merge($other_input);
+
+        $bulk = collect($request->all())->map(function($arr, $key){
+            return Arr::except($arr, ['createdAt']);
+        });
+        // return $bulk[3]['user_id'];
+
+        Found::insert($bulk->toArray());
     }
 
     /**
