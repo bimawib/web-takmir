@@ -11,6 +11,7 @@ use App\Http\Resources\V1\AgendaResource;
 use App\Http\Resources\V1\AgendaCollection;
 use App\Http\Requests\V1\StoreAgendaRequest;
 use App\Http\Requests\V1\UpdateAgendaRequest;
+use Illuminate\Support\Facades\Validator;
 
 class AgendaController extends Controller
 {
@@ -45,11 +46,37 @@ class AgendaController extends Controller
         $request['user_id'] = 13; // auth('sanctum')->user()->id;
         $request['published_at'] = now();
 
-        // return count(AgendaDetail::where('agenda_id',3)->get()); // untuk update うるかがすき terus dibuat for request count - detail count
-        // validate all array from $request->agenda_detail[] later
-        $create = Agenda::create($request->all());
-        $with_detail = Agenda::where('slug',$request->slug)->with('agenda_detail')->first();
+        $detail = $request->agendaDetail;
+        // return $detail[0]['agendaName'];
 
+        $validator = Validator::make($detail,[
+            '*.agendaName'=>'required|max:255',
+            '*.startTime'=>'required|date_format:Y-m-d H:i:s',
+            '*.endTime'=>'required|date_format:Y-m-d H:i:s',
+            '*.location'=>'required|max:255',
+            '*.keynoteSpeaker'=>'required|max:255',
+            '*.note'=>'required|max:255'
+        ]);
+        if($validator->fails()){
+            return $validator->messages();
+        }
+
+        $create = Agenda::create($request->all());
+
+        foreach($detail as $value){
+            AgendaDetail::create([
+                'agenda_id'=>$create->id,
+                'agenda_name'=>$value['agendaName'],
+                'start_time'=>$value['startTime'],
+                'end_time'=>$value['endTime'],
+                'location'=>$value['location'],
+                'keynote_speaker'=>$value['keynoteSpeaker'],
+                'note'=>$value['note']
+            ]);
+        }
+        
+        $with_detail = Agenda::where('slug',$request->slug)->with('agenda_detail')->first();
+        
         return new AgendaResource($with_detail);
     }
 
@@ -75,7 +102,9 @@ class AgendaController extends Controller
      */
     public function update(Request $request, Agenda $agenda)
     {
-        //
+        
+        // return count(AgendaDetail::where('agenda_id',3)->get()); // untuk update うるかがすき terus dibuat for request count - detail count
+        
     }
 
     /**
