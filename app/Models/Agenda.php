@@ -26,7 +26,8 @@ class Agenda extends Model
         'slug',
         'image',
         'location',
-        'date'
+        'date',
+        'published_at'
     ];
 
     public function agenda_detail(){

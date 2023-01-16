@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\api\V1;
 
 use App\Models\Agenda;
+use App\Models\AgendaDetail;
 use Illuminate\Http\Request;
 use App\Filters\V1\AgendaFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\StoreAgendaRequest;
 use App\Http\Resources\V1\AgendaResource;
-use App\Http\Requests\V1\UpdateAgendaRequest;
 use App\Http\Resources\V1\AgendaCollection;
+use App\Http\Requests\V1\StoreAgendaRequest;
+use App\Http\Requests\V1\UpdateAgendaRequest;
 
 class AgendaController extends Controller
 {
@@ -39,9 +40,17 @@ class AgendaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAgendaRequest $request)
     {
-        //
+        $request['user_id'] = 13; // auth('sanctum')->user()->id;
+        $request['published_at'] = now();
+
+        // return count(AgendaDetail::where('agenda_id',3)->get()); // untuk update うるかがすき terus dibuat for request count - detail count
+        // validate all array from $request->agenda_detail[] later
+        $create = Agenda::create($request->all());
+        $with_detail = Agenda::where('slug',$request->slug)->with('agenda_detail')->first();
+
+        return new AgendaResource($with_detail);
     }
 
     /**

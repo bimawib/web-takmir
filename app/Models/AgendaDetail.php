@@ -17,6 +17,7 @@ class AgendaDetail extends Model
 
     protected $fillable = [
         'agenda_id',
+        'agenda_name',
         'start_time',
         'end_time',
         'location',
