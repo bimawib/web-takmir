@@ -48,7 +48,7 @@ class FoundController extends Controller
      */
     public function store(StoreFoundRequest $request)
     {
-        $request['user_id'] = 14; // auth('sanctum')->user()->id;
+        $request['user_id'] = 13; // auth('sanctum')->user()->id;
         $request['is_returned']=0;
 
         return new FoundResource(Found::create($request->all()));
