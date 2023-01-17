@@ -95,9 +95,6 @@ class AgendaController extends Controller
      */
     public function update(UpdateAgendaRequest $request, Agenda $agenda)
     {
-        // make instance for yang mau create atau update, dan delete (lebih dari) try to think to make it 1 query pakai where >
-        // update bisa pake upserts
-        // return count(AgendaDetail::where('agenda_id',3)->get()); // untuk update うるかがすき terus dibuat for request count - detail count
         
         $request['slug'] = $agenda->slug;
 
@@ -116,27 +113,13 @@ class AgendaController extends Controller
 
         $agenda->update($request->all());
 
-        // create dulu detail yg berlebih biar bisa diambil idnya di foreach. janlup define instance baru biar ada idnya
-
         if($last_request_detail < $last_unupdated_detail){
             AgendaDetail::where('agenda_id',$agenda->id)->where('id','>',$detail[$last_request_detail]->id)->delete();
         }
-
-        // for($kt = 0; $kt <= $last_unupdated_detail; $kt++){
-        //     AgendaDetail::where('agenda_id',$agenda->id)->where('id',$detail[$kt]->id)->update([
-        //         'agenda_id'=>$agenda->id,
-        //         'agenda_name'=>$request_detail[$kt]['agendaName'],
-        //         'start_time'=>$request_detail[$kt]['startTime'],
-        //         'end_time'=>$request_detail[$kt]['endTime'],
-        //         'location'=>$request_detail[$kt]['location'],
-        //         'keynote_speaker'=>$request_detail[$kt]['keynoteSpeaker'],
-        //         'note'=>$request_detail[$kt]['note']
-        //     ]);
-        // }
         
         $detail_after = AgendaDetail::where('agenda_id',$agenda->id)->get();
         $kt = 0;
-        foreach($detail_after as $det){
+        foreach($detail_after as $da){
             AgendaDetail::where('agenda_id',$agenda->id)->where('id',$detail_after[$kt]->id)->update([
                 'agenda_id'=>$agenda->id,
                 'agenda_name'=>$request_detail[$kt]['agendaName'],
@@ -162,16 +145,6 @@ class AgendaController extends Controller
             ];
         }
         AgendaDetail::insert($new_detail);
-
-        // $detail_update = [];
-        // foreach($request_detail as $rd){
-        //     $detail_update[] = [
-                
-        //     ];
-        // }
-        
-        // AgendaDetail::where('agenda_id',$agenda->id)->update($detail_update);
-        // AgendaDetail::upsert($detail_update,['agenda_id'],['agenda_name','start_time','end_time','location','keynote_speaker','note']);
 
         $with_detail = Agenda::where('slug',$agenda->slug)->with('agenda_detail')->first();
         
