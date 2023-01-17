@@ -25,7 +25,7 @@ class Blog extends Model
     }
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     } // nama kolom foreign key bisa dikasih sebagai parameter kedua, ex (User::class,'user_id','id')
     // the belongsTo find the foreign key by method name (in this case user) and adding _id so its user_id
 }

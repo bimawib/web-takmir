@@ -50,9 +50,11 @@ class BlogController extends Controller
      */
     public function store(StoreBlogRequest $request)
     {
-        $request['user_id'] = 14; // auth('sanctum')->user()->id;
+        $request['user_id'] = 11; // auth('sanctum')->user()->id;
 
-        return new BlogResource(Blog::create($request->all()));
+        $blog = Blog::create($request->all());
+
+        return new BlogResource($blog);
     }
 
     /**
