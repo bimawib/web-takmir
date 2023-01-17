@@ -46,24 +46,17 @@ class AgendaController extends Controller
         $request['user_id'] = 13; // auth('sanctum')->user()->id;
         $request['published_at'] = now();
 
-        $detail = $request->agendaDetail;
+        $request_detail = $request->agendaDetail;
         // return $detail[0]['agendaName'];
+        $is_valid = $this->detailValidator($request_detail);
 
-        $validator = Validator::make($detail,[
-            '*.agendaName'=>'required|max:255',
-            '*.startTime'=>'required|date_format:Y-m-d H:i:s',
-            '*.endTime'=>'required|date_format:Y-m-d H:i:s',
-            '*.location'=>'required|max:255',
-            '*.keynoteSpeaker'=>'required|max:255',
-            '*.note'=>'required|max:255'
-        ]);
-        if($validator->fails()){
-            return $validator->messages();
+        if($is_valid != "success"){
+            return $is_valid;
         }
 
         $create = Agenda::create($request->all());
 
-        foreach($detail as $value){
+        foreach($request_detail as $value){
             AgendaDetail::create([
                 'agenda_id'=>$create->id,
                 'agenda_name'=>$value['agendaName'],
@@ -100,11 +93,89 @@ class AgendaController extends Controller
      * @param  \App\Models\Agenda  $agenda
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Agenda $agenda)
+    public function update(UpdateAgendaRequest $request, Agenda $agenda)
     {
-        
+        // make instance for yang mau create atau update, dan delete (lebih dari) try to think to make it 1 query pakai where >
+        // update bisa pake upserts
         // return count(AgendaDetail::where('agenda_id',3)->get()); // untuk update うるかがすき terus dibuat for request count - detail count
         
+        $request['slug'] = $agenda->slug;
+
+        $detail = AgendaDetail::where('agenda_id',$agenda->id)->get();
+
+        $request_detail = $request->agendaDetail;
+
+        $is_valid = $this->detailValidator($request_detail);
+
+        $last_request_detail = array_key_last($request_detail);
+        $last_unupdated_detail = array_key_last($detail->toArray());
+
+        if($is_valid != "success"){
+            return $is_valid;
+        }
+
+        $agenda->update($request->all());
+
+        // create dulu detail yg berlebih biar bisa diambil idnya di foreach. janlup define instance baru biar ada idnya
+
+        if($last_request_detail < $last_unupdated_detail){
+            AgendaDetail::where('agenda_id',$agenda->id)->where('id','>',$detail[$last_request_detail]->id)->delete();
+        }
+
+        // for($kt = 0; $kt <= $last_unupdated_detail; $kt++){
+        //     AgendaDetail::where('agenda_id',$agenda->id)->where('id',$detail[$kt]->id)->update([
+        //         'agenda_id'=>$agenda->id,
+        //         'agenda_name'=>$request_detail[$kt]['agendaName'],
+        //         'start_time'=>$request_detail[$kt]['startTime'],
+        //         'end_time'=>$request_detail[$kt]['endTime'],
+        //         'location'=>$request_detail[$kt]['location'],
+        //         'keynote_speaker'=>$request_detail[$kt]['keynoteSpeaker'],
+        //         'note'=>$request_detail[$kt]['note']
+        //     ]);
+        // }
+        
+        $detail_after = AgendaDetail::where('agenda_id',$agenda->id)->get();
+        $kt = 0;
+        foreach($detail_after as $det){
+            AgendaDetail::where('agenda_id',$agenda->id)->where('id',$detail_after[$kt]->id)->update([
+                'agenda_id'=>$agenda->id,
+                'agenda_name'=>$request_detail[$kt]['agendaName'],
+                'start_time'=>$request_detail[$kt]['startTime'],
+                'end_time'=>$request_detail[$kt]['endTime'],
+                'location'=>$request_detail[$kt]['location'],
+                'keynote_speaker'=>$request_detail[$kt]['keynoteSpeaker'],
+                'note'=>$request_detail[$kt]['note']
+            ]);
+            $kt++;
+        }
+
+        $new_detail = [];
+        for($unreq = $last_unupdated_detail; $unreq < $last_request_detail; $unreq++){
+            $new_detail[] = [
+                'agenda_id'=>$agenda->id,
+                'agenda_name'=>$request_detail[$unreq + 1]['agendaName'],
+                'start_time'=>$request_detail[$unreq + 1]['startTime'],
+                'end_time'=>$request_detail[$unreq + 1]['endTime'],
+                'location'=>$request_detail[$unreq + 1]['location'],
+                'keynote_speaker'=>$request_detail[$unreq + 1]['keynoteSpeaker'],
+                'note'=>$request_detail[$unreq + 1]['note']
+            ];
+        }
+        AgendaDetail::insert($new_detail);
+
+        // $detail_update = [];
+        // foreach($request_detail as $rd){
+        //     $detail_update[] = [
+                
+        //     ];
+        // }
+        
+        // AgendaDetail::where('agenda_id',$agenda->id)->update($detail_update);
+        // AgendaDetail::upsert($detail_update,['agenda_id'],['agenda_name','start_time','end_time','location','keynote_speaker','note']);
+
+        $with_detail = Agenda::where('slug',$agenda->slug)->with('agenda_detail')->first();
+        
+        return new AgendaResource($with_detail);
     }
 
     /**
@@ -117,4 +188,21 @@ class AgendaController extends Controller
     {
         //
     }
+
+    private function detailValidator($request_detail){
+        $validator = Validator::make($request_detail,[
+            '*.agendaName'=>'required|max:255',
+            '*.startTime'=>'required|date_format:Y-m-d H:i:s',
+            '*.endTime'=>'required|date_format:Y-m-d H:i:s',
+            '*.location'=>'required|max:255',
+            '*.keynoteSpeaker'=>'required|max:255',
+            '*.note'=>'required|max:255'
+        ]);
+        if($validator->fails()){ 
+            return $validator->messages();
+        } else {
+            return "success";
+        }
+    }
+
 }
