@@ -46,8 +46,9 @@ class AgendaController extends Controller
         $request['user_id'] = 13; // auth('sanctum')->user()->id;
         $request['published_at'] = now();
 
+        $request['slug'] = $this->slugCreate($request['title']);
+
         $request_detail = $request->agendaDetail;
-        // return $detail[0]['agendaName'];
         $is_valid = $this->detailValidator($request_detail);
 
         if($is_valid != "success"){
@@ -69,8 +70,14 @@ class AgendaController extends Controller
         }
         
         $with_detail = Agenda::where('slug',$request->slug)->with('agenda_detail')->first();
-        
-        return new AgendaResource($with_detail);
+        $slug_after = $with_detail->slug . $with_detail->id;
+
+        Agenda::where('slug',$request->slug)->update(['slug'=>$slug_after]); // update slug dengan id
+
+        $with_fixed_slug = Agenda::where('slug',$slug_after)->with('agenda_detail')->first();
+
+        return new AgendaResource($with_fixed_slug);
+
     }
 
     /**
@@ -96,9 +103,15 @@ class AgendaController extends Controller
     public function update(UpdateAgendaRequest $request, Agenda $agenda)
     {
         
-        $request['slug'] = $agenda->slug;
+        // $request['slug'] = $agenda->slug;
         $detail = AgendaDetail::where('agenda_id',$agenda->id)->get();
         $request_detail = $request->agendaDetail;
+
+        if($agenda->title != $request->title){
+            $request['slug'] = $this->slugCreate($request->title, $agenda->id);
+        } else {
+            $request['slug'] = $agenda->slug;
+        }
 
         $last_request_detail = array_key_last($request_detail);
         $last_unupdated_detail = array_key_last($detail->toArray());
@@ -141,7 +154,7 @@ class AgendaController extends Controller
 
         AgendaDetail::insert($new_detail);
 
-        $with_detail = Agenda::where('slug',$agenda->slug)->with('agenda_detail')->first();
+        $with_detail = Agenda::where('slug',$request['slug'])->with('agenda_detail')->first();
         
         return new AgendaResource($with_detail);
     }
@@ -171,6 +184,16 @@ class AgendaController extends Controller
         } else {
             return "success";
         }
+    }
+
+    public function slugCreate($name, $model_id = ''){
+        $splitter = explode(" ", $name);
+        $attacher = implode("-", array_splice($splitter,0,3));
+        $randomizer = rand(100,999);
+        $existing_id = $model_id ?? null;
+
+        $slug = $attacher."-".$randomizer.$model_id;
+        return strtolower($slug);
     }
 
 }
