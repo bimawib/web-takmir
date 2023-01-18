@@ -97,16 +97,13 @@ class AgendaController extends Controller
     {
         
         $request['slug'] = $agenda->slug;
-
         $detail = AgendaDetail::where('agenda_id',$agenda->id)->get();
-
         $request_detail = $request->agendaDetail;
-
-        $is_valid = $this->detailValidator($request_detail);
 
         $last_request_detail = array_key_last($request_detail);
         $last_unupdated_detail = array_key_last($detail->toArray());
 
+        $is_valid = $this->detailValidator($request_detail);
         if($is_valid != "success"){
             return $is_valid;
         }
@@ -117,33 +114,31 @@ class AgendaController extends Controller
             AgendaDetail::where('agenda_id',$agenda->id)->where('id','>',$detail[$last_request_detail]->id)->delete();
         }
         
+        function requestArray($agenda_id,$req_dtl,$arr){
+            return [
+                'agenda_id'=>$agenda_id,
+                'agenda_name'=>$req_dtl[$arr]['agendaName'],
+                'start_time'=>$req_dtl[$arr]['startTime'],
+                'end_time'=>$req_dtl[$arr]['endTime'],
+                'location'=>$req_dtl[$arr]['location'],
+                'keynote_speaker'=>$req_dtl[$arr]['keynoteSpeaker'],
+                'note'=>$req_dtl[$arr]['note']
+            ];
+        }
+
         $detail_after = AgendaDetail::where('agenda_id',$agenda->id)->get();
-        $kt = 0;
+        $arr_counter = 0;
         foreach($detail_after as $da){
-            AgendaDetail::where('agenda_id',$agenda->id)->where('id',$detail_after[$kt]->id)->update([
-                'agenda_id'=>$agenda->id,
-                'agenda_name'=>$request_detail[$kt]['agendaName'],
-                'start_time'=>$request_detail[$kt]['startTime'],
-                'end_time'=>$request_detail[$kt]['endTime'],
-                'location'=>$request_detail[$kt]['location'],
-                'keynote_speaker'=>$request_detail[$kt]['keynoteSpeaker'],
-                'note'=>$request_detail[$kt]['note']
-            ]);
-            $kt++;
+            $asu = requestArray($agenda->id, $request_detail, $arr_counter);
+            AgendaDetail::where('agenda_id',$agenda->id)->where('id',$detail_after[$arr_counter]->id)->update($asu);
+            $arr_counter++;
         }
 
         $new_detail = [];
-        for($unreq = $last_unupdated_detail; $unreq < $last_request_detail; $unreq++){
-            $new_detail[] = [
-                'agenda_id'=>$agenda->id,
-                'agenda_name'=>$request_detail[$unreq + 1]['agendaName'],
-                'start_time'=>$request_detail[$unreq + 1]['startTime'],
-                'end_time'=>$request_detail[$unreq + 1]['endTime'],
-                'location'=>$request_detail[$unreq + 1]['location'],
-                'keynote_speaker'=>$request_detail[$unreq + 1]['keynoteSpeaker'],
-                'note'=>$request_detail[$unreq + 1]['note']
-            ];
+        for($unreq = $last_unupdated_detail + 1; $unreq < $last_request_detail + 1; $unreq++){
+            $new_detail[] = requestArray($agenda->id, $request_detail, $unreq);
         }
+
         AgendaDetail::insert($new_detail);
 
         $with_detail = Agenda::where('slug',$agenda->slug)->with('agenda_detail')->first();
