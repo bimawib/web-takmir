@@ -102,16 +102,11 @@ class AgendaController extends Controller
      */
     public function update(UpdateAgendaRequest $request, Agenda $agenda)
     {
-        
-        // $request['slug'] = $agenda->slug;
         $detail = AgendaDetail::where('agenda_id',$agenda->id)->get();
         $request_detail = $request->agendaDetail;
 
-        if($agenda->title != $request->title){
-            $request['slug'] = $this->slugCreate($request->title, $agenda->id);
-        } else {
-            $request['slug'] = $agenda->slug;
-        }
+        $request['slug'] = $this->slugCreate($request->title, $agenda->title, $agenda->id) ?? $agenda->slug;
+        // slug tidak akan berubah jika 3 kata pertama dari title sebelum dan sesudah diupdate sama
 
         $last_request_detail = array_key_last($request_detail);
         $last_unupdated_detail = array_key_last($detail->toArray());
@@ -186,9 +181,17 @@ class AgendaController extends Controller
         }
     }
 
-    public function slugCreate($name, $model_id = ''){
+    public function slugCreate($name, $name_before = '', $model_id = ''){
         $splitter = explode(" ", $name);
         $attacher = implode("-", array_splice($splitter,0,3));
+
+        $splitter_2 = explode(" ", $name_before);
+        $attacher_2 = implode("-", array_splice($splitter_2,0,3));
+
+        if($name_before != '' && strtolower($attacher) == strtolower($attacher_2)){
+            return null;
+        }
+
         $randomizer = rand(100,999);
         $existing_id = $model_id ?? null;
 
