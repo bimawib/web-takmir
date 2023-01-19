@@ -118,6 +118,14 @@ class AgendaController extends Controller
 
         $agenda->update($request->all());
 
+        if(!isset($last_request_detail)){
+            AgendaDetail::where('agenda_id',$agenda->id)->delete();
+
+            $with_detail = Agenda::where('slug',$request['slug'])->with('agenda_detail')->first();
+        
+            return new AgendaResource($with_detail);
+        }
+
         if($last_request_detail < $last_unupdated_detail){
             AgendaDetail::where('agenda_id',$agenda->id)->where('id','>',$detail[$last_request_detail]->id)->delete();
         }
@@ -142,8 +150,16 @@ class AgendaController extends Controller
             $arr_counter++;
         }
 
-        $new_detail = [];
-        for($unreq = $last_unupdated_detail + 1; $unreq < $last_request_detail + 1; $unreq++){
+        $new_detail = []; // cek buat ada tidaknya agenda detail dari agenda sebelumnya yg sudah dibuat
+        $is_dtl_set = 1;
+        $dtl_add = 0;
+        
+        if(!isset($last_unupdated_detail)){
+            $is_dtl_set = 0;
+            $dtl_add = 1;
+        }
+
+        for($unreq = $last_unupdated_detail + $is_dtl_set; $unreq < $last_request_detail + $is_dtl_set + $dtl_add; $unreq++){
             $new_detail[] = requestArray($agenda->id, $request_detail, $unreq);
         }
 
