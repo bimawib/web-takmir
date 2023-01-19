@@ -37,7 +37,7 @@ class UpdateFoundRequest extends FormRequest
             ];
         } else {
             return [
-                'title'=>'sometimes|required|max:255',
+                'title'=>'required|max:255',
                 // 'slug'=>'sometimes|required|unique:founds|max:255',
                 'note'=>'sometimes|required|max:255',
                 'contact'=>'sometimes|required|numeric',

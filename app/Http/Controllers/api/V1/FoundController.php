@@ -81,13 +81,6 @@ class FoundController extends Controller
      */
     public function update(UpdateFoundRequest $request, Found $found)
     {
-        // $slug = $found->slug;
-        // if(isset($request->slug) && $slug != $request->slug){
-        //     $request->validate([
-        //         'slug'=>'required|unique:founds|max:255'
-        //     ]);
-        // }
-
         $request['slug'] = $this->slugCreate($request->title, $found->title, $found->id) ?? $found->slug;
 
         $found->update($request->all());

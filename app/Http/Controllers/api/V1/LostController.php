@@ -47,9 +47,15 @@ class LostController extends Controller
     {
         $request['user_id'] = 13; // auth('sanctum')->user()->id;
         $request['is_returned']=0;
-        // implement slugbabel here
 
-        return new LostResource(Lost::create($request->all()));
+        // implement slugbabel here
+        $request['slug'] = $this->slugCreate($request->title);
+
+        $lost = Lost::create($request->all());
+        $request['slug'] = $lost->slug . $lost->id;
+        $lost->update($request->all());
+
+        return new LostResource($lost);
     }
 
     /**
@@ -72,14 +78,11 @@ class LostController extends Controller
      */
     public function update(UpdateLostRequest $request, Lost $lost)
     {
-        $slug = $lost->slug;
-        if(isset($request->slug) && $slug != $request->slug){
-            $request->validate([
-                'slug'=>'required|unique:losts|max:255'
-            ]);
-        }
+        $request['slug'] = $this->slugCreate($request->title, $lost->title, $lost->id) ?? $lost->slug;
 
         $lost->update($request->all());
+
+        // return $lost;
     }
 
     /**
@@ -91,5 +94,23 @@ class LostController extends Controller
     public function destroy(Lost $lost)
     {
         //
+    }
+
+    public function slugCreate($name, $name_before = '', $model_id = ''){
+        $splitter = explode(" ", $name);
+        $attacher = implode("-", array_splice($splitter,0,3));
+
+        $splitter_2 = explode(" ", $name_before);
+        $attacher_2 = implode("-", array_splice($splitter_2,0,3));
+
+        if($name_before != '' && strtolower($attacher) == strtolower($attacher_2)){
+            return null;
+        }
+
+        $randomizer = rand(100,999);
+        $existing_id = $model_id ?? null;
+
+        $slug = $attacher."-".$randomizer.$model_id;
+        return strtolower($slug);
     }
 }
