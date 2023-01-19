@@ -178,7 +178,8 @@ class AgendaController extends Controller
      */
     public function destroy(Agenda $agenda)
     {
-        //
+        AgendaDetail::where('agenda_id',$agenda->id)->delete();
+        Agenda::destroy($agenda->id);
     }
 
     private function detailValidator($request_detail){

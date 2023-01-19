@@ -93,7 +93,7 @@ class LostController extends Controller
      */
     public function destroy(Lost $lost)
     {
-        //
+        Lost::destroy($lost->id);
     }
 
     public function slugCreate($name, $name_before = '', $model_id = ''){

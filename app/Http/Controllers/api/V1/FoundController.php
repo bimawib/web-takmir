@@ -96,7 +96,7 @@ class FoundController extends Controller
      */
     public function destroy(Found $found)
     {
-        //
+        Found::destroy($found->id);
     }
     
     public function bulkStore(BulkStoreFoundRequest $request){

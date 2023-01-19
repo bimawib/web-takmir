@@ -57,7 +57,7 @@ class BlogController extends Controller
         $blog = Blog::create($request->all());
 
         $request['slug'] = $blog->slug . $blog->id;
-        
+
         $blog->update($request->all());
 
         return new BlogResource($blog);
@@ -100,7 +100,7 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        //
+        Blog::destroy($blog->id);
     }
     
     public function withSlug($slug){
