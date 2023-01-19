@@ -50,9 +50,15 @@ class FoundController extends Controller
     {
         $request['user_id'] = 13; // auth('sanctum')->user()->id;
         $request['is_returned']=0;
-        // implement slugbabel here
 
-        return new FoundResource(Found::create($request->all()));
+        // implement slugbabel here
+        $request['slug'] = $this->slugCreate($request->title);
+
+        $found = Found::create($request->all());
+        $request['slug'] = $found->slug . $found->id;
+        $found->update($request->all());
+
+        return new FoundResource($found);
     }
 
     /**
@@ -75,14 +81,18 @@ class FoundController extends Controller
      */
     public function update(UpdateFoundRequest $request, Found $found)
     {
-        $slug = $found->slug;
-        if(isset($request->slug) && $slug != $request->slug){
-            $request->validate([
-                'slug'=>'required|unique:founds|max:255'
-            ]);
-        }
+        // $slug = $found->slug;
+        // if(isset($request->slug) && $slug != $request->slug){
+        //     $request->validate([
+        //         'slug'=>'required|unique:founds|max:255'
+        //     ]);
+        // }
+
+        $request['slug'] = $this->slugCreate($request->title, $found->title, $found->id) ?? $found->slug;
 
         $found->update($request->all());
+
+        // return $found;
     }
 
     /**
@@ -95,7 +105,6 @@ class FoundController extends Controller
     {
         //
     }
-
     
     public function bulkStore(BulkStoreFoundRequest $request){
         
@@ -116,5 +125,23 @@ class FoundController extends Controller
         // return $bulk[3]['user_id'];
 
         Found::insert($bulk->toArray());
+    }
+
+    public function slugCreate($name, $name_before = '', $model_id = ''){
+        $splitter = explode(" ", $name);
+        $attacher = implode("-", array_splice($splitter,0,3));
+
+        $splitter_2 = explode(" ", $name_before);
+        $attacher_2 = implode("-", array_splice($splitter_2,0,3));
+
+        if($name_before != '' && strtolower($attacher) == strtolower($attacher_2)){
+            return null;
+        }
+
+        $randomizer = rand(100,999);
+        $existing_id = $model_id ?? null;
+
+        $slug = $attacher."-".$randomizer.$model_id;
+        return strtolower($slug);
     }
 }
