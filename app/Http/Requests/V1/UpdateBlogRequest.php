@@ -13,7 +13,7 @@ class UpdateBlogRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,28 @@ class UpdateBlogRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $method = $this->method;
+        if($method == "PUT"){
+            return [
+                'title'=>'required|max:255',
+                'body'=>'required',
+                // 'image'=>'image|file|max:1024'
+            ];
+        } else {
+            return [
+                'title'=>'required|max:255',
+                'body'=>'sometimes|required',
+                // 'image'=>'sometimes|image|file|max:1024'
+            ];
+        }
+        
+    }
+
+    protected function prepareForValidation(){
+        if(isset($this->isVerified)){
+        $this->merge([
+            'is_verified'=>$this->isVerified
+        ]);
+        }
     }
 }

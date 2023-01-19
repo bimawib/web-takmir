@@ -52,7 +52,13 @@ class BlogController extends Controller
     {
         $request['user_id'] = 11; // auth('sanctum')->user()->id;
 
+        $request['slug'] = $this->slugCreate($request->title);
+
         $blog = Blog::create($request->all());
+
+        $request['slug'] = $blog->slug . $blog->id;
+        
+        $blog->update($request->all());
 
         return new BlogResource($blog);
     }
@@ -66,7 +72,6 @@ class BlogController extends Controller
     public function show(Blog $blog)
     {
         return new BlogResource($blog);
-        // should use slug instead for public reading
     }
 
     /**
@@ -76,9 +81,15 @@ class BlogController extends Controller
      * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Blog $blog)
+    public function update(UpdateBlogRequest $request, Blog $blog)
     {
-        //
+        // make is_verified only to admin and owner (later)
+
+        $request['slug'] = $this->slugCreate($request->title, $blog->title, $blog->id) ?? $blog->slug;
+
+        $blog->update($request->all());
+
+        // return $blog;
     }
 
     /**
@@ -92,8 +103,26 @@ class BlogController extends Controller
         //
     }
     
-    public function slug($slug){
+    public function withSlug($slug){
         $blog = Blog::where('slug',$slug)->first();
         return new BlogResource($blog);
+    }
+
+    public function slugCreate($name, $name_before = '', $model_id = ''){
+        $splitter = explode(" ", $name);
+        $attacher = implode("-", array_splice($splitter,0,3));
+
+        $splitter_2 = explode(" ", $name_before);
+        $attacher_2 = implode("-", array_splice($splitter_2,0,3));
+
+        if($name_before != '' && strtolower($attacher) == strtolower($attacher_2)){
+            return null;
+        }
+
+        $randomizer = rand(100,999);
+        $existing_id = $model_id ?? null;
+
+        $slug = $attacher."-".$randomizer.$model_id;
+        return strtolower($slug);
     }
 }

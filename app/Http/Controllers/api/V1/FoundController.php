@@ -50,29 +50,9 @@ class FoundController extends Controller
     {
         $request['user_id'] = 13; // auth('sanctum')->user()->id;
         $request['is_returned']=0;
+        // implement slugbabel here
 
         return new FoundResource(Found::create($request->all()));
-    }
-
-    public function bulkStore(BulkStoreFoundRequest $request){
-        
-        $arrayRequest = $request->toArray();
-        $arrayCount = count($arrayRequest);
-
-        $other_input = [];
-        foreach($request->toArray() as $req){
-            $req['user_id'] = 13; // auth('sanctum')->user()->id;
-            $req['created_at'] = now();
-            $other_input[] = $req;
-        }
-        $request->merge($other_input);
-
-        $bulk = collect($request->all())->map(function($arr, $key){
-            return Arr::except($arr, ['createdAt']);
-        });
-        // return $bulk[3]['user_id'];
-
-        Found::insert($bulk->toArray());
     }
 
     /**
@@ -114,5 +94,27 @@ class FoundController extends Controller
     public function destroy(Found $found)
     {
         //
+    }
+
+    
+    public function bulkStore(BulkStoreFoundRequest $request){
+        
+        $arrayRequest = $request->toArray();
+        $arrayCount = count($arrayRequest);
+
+        $other_input = [];
+        foreach($request->toArray() as $req){
+            $req['user_id'] = 13; // auth('sanctum')->user()->id;
+            $req['created_at'] = now();
+            $other_input[] = $req;
+        }
+        $request->merge($other_input);
+
+        $bulk = collect($request->all())->map(function($arr, $key){
+            return Arr::except($arr, ['createdAt']);
+        });
+        // return $bulk[3]['user_id'];
+
+        Found::insert($bulk->toArray());
     }
 }

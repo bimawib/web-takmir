@@ -26,7 +26,7 @@ class StoreBlogRequest extends FormRequest
     {
         return [
             'title'=>'required|max:255',
-            'slug'=>'required|unique:blogs|max:255',
+            // 'slug'=>'required|unique:blogs|max:255',
             'body'=>'required',
             // 'image'=>'image|file|max:1024'
         ];

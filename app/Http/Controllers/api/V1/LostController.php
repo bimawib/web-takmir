@@ -47,6 +47,7 @@ class LostController extends Controller
     {
         $request['user_id'] = 13; // auth('sanctum')->user()->id;
         $request['is_returned']=0;
+        // implement slugbabel here
 
         return new LostResource(Lost::create($request->all()));
     }

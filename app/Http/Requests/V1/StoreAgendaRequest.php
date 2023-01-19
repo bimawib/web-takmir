@@ -26,7 +26,7 @@ class StoreAgendaRequest extends FormRequest
     {
         return [
             'title'=>'required|max:255',
-            'slug'=>'required|unique:agendas|max:255',
+            // 'slug'=>'required|unique:agendas|max:255',
             // 'image'=>'image|file|max:1024',
             'location'=>'required|max:255',
             'date'=>'required|date_format:Y-m-d H:i:s'
