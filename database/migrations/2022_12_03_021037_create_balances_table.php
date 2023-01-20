@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('incoming_balance')->default(0)->nullable();
             $table->integer('total_balance');
             $table->string('note')->nullable();
+            $table->datetime('date');
             $table->timestamps();
         });
     }

@@ -28,7 +28,8 @@ class StoreBalanceRequest extends FormRequest
             'title'=>'required|max:255',
             'isSpend'=>['required',Rule::in([0,1])],
             'amountBalance'=>'required|numeric|min:100',
-            'note'=>'required|max:255'
+            'note'=>'required|max:255',
+            'date'=>'required|date_format:Y-m-d H:i:s'
         ];
     }
 

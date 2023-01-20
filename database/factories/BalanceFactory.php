@@ -33,7 +33,8 @@ class BalanceFactory extends Factory
             'spend_balance'=>$spend_rand,
             'incoming_balance'=>$income_rand,
             'total_balance'=>$this->faker->numberBetween(500000,5000000),
-            'note'=>$this->faker->text(13)
+            'note'=>$this->faker->text(13),
+            'date'=>$this->faker->date()
         ];
     }
 }

@@ -23,6 +23,7 @@ class BalanceResource extends JsonResource
             'spendBalance'=>$this->spend_balance,
             'incomingBalance'=>$this->incoming_balance,
             'totalBalance'=>$this->total_balance,
+            'date'=>$this->date,
             'createdAt'=>$this->created_at
         ];
     }

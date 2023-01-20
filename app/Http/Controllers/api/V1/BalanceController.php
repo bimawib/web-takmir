@@ -23,7 +23,7 @@ class BalanceController extends Controller
         $filter = new BalanceFilter();
         $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
 
-        $Balance = Balance::where($queryItems);
+        $balance = Balance::where($queryItems);
         $sortBy = $request['sortBy'];
 
         $columnMap = [
@@ -35,18 +35,18 @@ class BalanceController extends Controller
         if(isset($sortBy['asc'])){
             foreach($columnMap as $fromQuery => $toTable){
                 if($sortBy['asc'] == $fromQuery){
-                    return new BalanceCollection($Balance->orderBy($toTable,'asc')->paginate()->appends($request->query()));
+                    return new BalanceCollection($balance->orderBy($toTable,'asc')->paginate()->appends($request->query()));
                 }
             }
         } elseif(isset($sortBy['desc'])){
             foreach($columnMap as $fromQuery => $toTable){
                 if($sortBy['desc'] == $fromQuery){
-                    return new BalanceCollection($Balance->orderBy($toTable,'desc')->paginate()->appends($request->query()));
+                    return new BalanceCollection($balance->orderBy($toTable,'desc')->paginate()->appends($request->query()));
                 }
             }
         }
 
-        return new BalanceCollection($Balance->paginate()->appends($request->query()));
+        return new BalanceCollection($balance->orderBy('date','asc')->paginate()->appends($request->query()));
     }
 
     /**
@@ -73,7 +73,6 @@ class BalanceController extends Controller
                 return response()->json([
                     'error'=>[
                         'status'=>405,
-                        'error'=>"Method Not Allowed",
                         'message'=>'Cannot reduce unexistent balance'
                     ]
                 ],405);
@@ -114,7 +113,8 @@ class BalanceController extends Controller
      */
     public function update(Request $request, Balance $balance)
     {
-        //
+        // hanya update title,date dan note saja, karna akan rusak struktur total balance atau update dengan cara hapus dan create baru
+
     }
 
     /**
@@ -125,7 +125,7 @@ class BalanceController extends Controller
      */
     public function destroy(Balance $balance)
     {
-        //
+        // sebelum delete pastikan kurangi atau tambahkan totalBalance (delete this balance, and create new balance dengan title cancel input for ($balance->title))
     }
 
     public function latestBalance(){
