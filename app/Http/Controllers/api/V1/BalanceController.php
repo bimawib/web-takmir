@@ -55,9 +55,43 @@ class BalanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreBalanceRequest $request)
     {
-        //
+        $request['user_id'] = 13; // auth('sanctum')->user()->id;
+
+        $request['spend_balance'] = 0;
+        $request['incoming_balance'] = 0;
+
+        $last_added_balance = Balance::orderBy('id','desc')->first();
+
+        // return isset($last_added_balance);
+
+        if($request->isSpend == 1){
+            $request['spend_balance'] = $request->amountBalance;
+
+            if(!isset($last_added_balance) == 1){
+                return response()->json([
+                    'error'=>[
+                        'status'=>405,
+                        'error'=>"Method Not Allowed",
+                        'message'=>'Cannot reduce unexistent balance'
+                    ]
+                ],405);
+            }
+
+            $request['total_balance'] = $last_added_balance->total_balance - $request->amountBalance;
+
+        } elseif($request->isSpend == 0){
+            $request['incoming_balance'] = $request->amountBalance;
+
+            $total_balance_before = $last_added_balance->total_balance ?? 0;
+
+            $request['total_balance'] = $total_balance_before + $request->amountBalance;
+        }
+
+        $balance = Balance::create($request->all());
+        // return $last_added_balance->total_balance;
+        return new BalanceResource($balance);
     }
 
     /**
