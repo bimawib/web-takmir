@@ -43,7 +43,17 @@ class AgendaController extends Controller
      */
     public function store(StoreAgendaRequest $request)
     {
-        $request['user_id'] = 13; // auth('sanctum')->user()->id;
+        $user = auth('sanctum')->user();
+        if($user->is_admin == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to store agenda!'
+                ]
+            ],403);
+        }
+
+        $request['user_id'] = auth('sanctum')->user()->id;
         $request['published_at'] = now();
 
         $request['slug'] = $this->slugCreate($request['title']);
@@ -102,6 +112,15 @@ class AgendaController extends Controller
      */
     public function update(UpdateAgendaRequest $request, Agenda $agenda)
     {
+        $user = auth('sanctum')->user();
+        if($user->is_admin == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to update agenda!'
+                ]
+            ],403);
+        }
         $detail = AgendaDetail::where('agenda_id',$agenda->id)->get();
         $request_detail = $request->agendaDetail;
 
@@ -178,6 +197,16 @@ class AgendaController extends Controller
      */
     public function destroy(Agenda $agenda)
     {
+        $user = auth('sanctum')->user();
+        if($user->is_admin == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to delete agenda!'
+                ]
+            ],403);
+        }
+
         AgendaDetail::where('agenda_id',$agenda->id)->delete();
         Agenda::destroy($agenda->id);
     }

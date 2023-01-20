@@ -40,7 +40,7 @@ Route::get('/sanctumtest',[SanctumTestController::class,'index'])->middleware('a
 
 Route::get('/v1/blog/slug/{slug}',[BlogController::class,'withSlug']); // use this for slug only
 
-Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1'], function(){
+Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'], function(){
     Route::post('found/bulk',[FoundController::class,'bulkStore']);
 
     Route::apiResource('blog',BlogController::class);

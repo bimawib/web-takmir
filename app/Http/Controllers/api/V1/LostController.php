@@ -45,7 +45,18 @@ class LostController extends Controller
      */
     public function store(StoreLostRequest $request)
     {
-        $request['user_id'] = 13; // auth('sanctum')->user()->id;
+        $user = auth('sanctum')->user();
+
+        if($user->is_verified == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to store lost item!'
+                ]
+            ],403);
+        }
+
+        $request['user_id'] = auth('sanctum')->user()->id;
         $request['is_returned']=0;
 
         // implement slugbabel here
@@ -78,6 +89,19 @@ class LostController extends Controller
      */
     public function update(UpdateLostRequest $request, Lost $lost)
     {
+        $user = auth('sanctum')->user();
+
+        if($user->is_admin == 0){
+            if($user->is_verified == 0 || $user->id != $lost->user_id){
+                return response()->json([
+                    'error'=>[
+                        'status'=>403,
+                        'message'=>'You dont have ability to update blog!'
+                    ]
+                ],403);
+            }
+        }
+
         $request['slug'] = $this->slugCreate($request->title, $lost->title, $lost->id) ?? $lost->slug;
 
         $lost->update($request->all());

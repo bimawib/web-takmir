@@ -20,6 +20,16 @@ class BalanceController extends Controller
      */
     public function index(Request $request)
     {
+        $user = auth('sanctum')->user();
+        if($user->is_owner == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to see balance!'
+                ]
+            ],403);
+        } // use another method instead, buat link api baru untuk yg umum
+
         $filter = new BalanceFilter();
         $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
 
@@ -57,7 +67,17 @@ class BalanceController extends Controller
      */
     public function store(StoreBalanceRequest $request)
     {
-        $request['user_id'] = 13; // auth('sanctum')->user()->id;
+        $request['user_id'] = auth('sanctum')->user()->id;
+
+        $user = auth('sanctum')->user();
+        if($user->is_owner == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to store balance!'
+                ]
+            ],403);
+        }
 
         $request['spend_balance'] = 0;
         $request['incoming_balance'] = 0;
@@ -101,6 +121,15 @@ class BalanceController extends Controller
      */
     public function show(Balance $balance)
     {
+        $user = auth('sanctum')->user();
+        if($user->is_owner == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to show balance!'
+                ]
+            ],403);
+        }
         return new BalanceResource($balance);
     }
 
@@ -114,6 +143,7 @@ class BalanceController extends Controller
     public function update(Request $request, Balance $balance)
     {
         // hanya update title,date dan note saja, karna akan rusak struktur total balance atau update dengan cara hapus dan create baru
+        // jadikan spend balance/ incoming balance 0 jika delete, pakai note untuk notice canceled-transaction
 
     }
 
@@ -126,6 +156,7 @@ class BalanceController extends Controller
     public function destroy(Balance $balance)
     {
         // sebelum delete pastikan kurangi atau tambahkan totalBalance (delete this balance, and create new balance dengan title cancel input for ($balance->title))
+        // might just wanna make 1 more table for total_balance
     }
 
     public function latestBalance(){

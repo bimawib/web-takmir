@@ -50,7 +50,18 @@ class BlogController extends Controller
      */
     public function store(StoreBlogRequest $request)
     {
-        $request['user_id'] = 11; // auth('sanctum')->user()->id;
+        $user = auth('sanctum')->user();
+
+        if($user->is_verified == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to store blog!'
+                ]
+            ],403);
+        }
+
+        $request['user_id'] = auth('sanctum')->user()->id;
 
         $request['slug'] = $this->slugCreate($request->title);
 
@@ -84,6 +95,22 @@ class BlogController extends Controller
     public function update(UpdateBlogRequest $request, Blog $blog)
     {
         // make is_verified only to admin and owner (later)
+        $user = auth('sanctum')->user();
+
+        if($user->is_admin == 0){
+            if($user->is_verified == 0 || $user->id != $blog->user_id){
+                return response()->json([
+                    'error'=>[
+                        'status'=>403,
+                        'message'=>'You dont have ability to update blog!'
+                    ]
+                ],403);
+            }
+        }
+
+        if($user->is_admin == 0){
+            $request['is_verified'] = 0;
+        }
 
         $request['slug'] = $this->slugCreate($request->title, $blog->title, $blog->id) ?? $blog->slug;
 
@@ -100,6 +127,18 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
+        $user = auth('sanctum')->user();
+
+        if($user->is_admin == 0){
+            if($user->is_verified == 0 || $user->id != $blog->user_id){
+                return response()->json([
+                    'error'=>[
+                        'status'=>403,
+                        'message'=>'You dont have ability to update blog!'
+                    ]
+                ],403);
+            }
+        }
         Blog::destroy($blog->id);
     }
     

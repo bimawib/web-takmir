@@ -48,7 +48,16 @@ class FoundController extends Controller
      */
     public function store(StoreFoundRequest $request)
     {
-        $request['user_id'] = 13; // auth('sanctum')->user()->id;
+        $user = auth('sanctum')->user();
+        if($user->is_admin == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to store found item!'
+                ]
+            ],403);
+        }
+        $request['user_id'] = auth('sanctum')->user()->id;
         $request['is_returned']=0;
 
         // implement slugbabel here
@@ -81,6 +90,15 @@ class FoundController extends Controller
      */
     public function update(UpdateFoundRequest $request, Found $found)
     {
+        $user = auth('sanctum')->user();
+        if($user->is_admin == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to store found item!'
+                ]
+            ],403);
+        }
         $request['slug'] = $this->slugCreate($request->title, $found->title, $found->id) ?? $found->slug;
 
         $found->update($request->all());
@@ -96,6 +114,15 @@ class FoundController extends Controller
      */
     public function destroy(Found $found)
     {
+        $user = auth('sanctum')->user();
+        if($user->is_admin == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to store found item!'
+                ]
+            ],403);
+        }
         Found::destroy($found->id);
     }
     
