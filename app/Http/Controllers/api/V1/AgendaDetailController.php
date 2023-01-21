@@ -5,8 +5,8 @@ namespace App\Http\Controllers\api\V1;
 use App\Models\AgendaDetail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreAgendaDetailRequest;
-use App\Http\Requests\UpdateAgendaDetailRequest;
+use App\Http\Requests\V1\StoreAgendaDetailRequest;
+use App\Http\Requests\V1\UpdateAgendaDetailRequest;
 
 class AgendaDetailController extends Controller
 {

@@ -5,14 +5,14 @@ namespace App\Filters\V1;
 use Illuminate\Http\Request;
 use App\Filters\ApiFilter;
 
-class BlogFilter extends ApiFilter {
+class LostFilter extends ApiFilter {
     protected $allowedParam = [
         'title'=>['eq','like'],
         'slug'=>['eq'],
     ];
 
     protected $columnMap = [
-        // 'isVerified'=>'is_verified'
+        'isReturned'=>'is_returned'
     ];
 
     protected $operatorMap = [

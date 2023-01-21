@@ -2,11 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\V1\AuthController;
 use App\Http\Controllers\api\V1\AgendaController;
 use App\Http\Controllers\api\V1\BalanceController;
 use App\Http\Controllers\api\V1\BlogController;
+use App\Http\Controllers\api\V1\FoundController;
 use App\Http\Controllers\api\V1\UserController;
+use App\Http\Controllers\SanctumTestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,17 +32,34 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/sanctumtest',[SanctumTestController::class,'index'])->middleware('auth:sanctum');
+
 //
 // API/V1
 //
 
-Route::get('/v1/blog/slug/{slug}',[BlogController::class,'slug']); // use this for slug only
+// bikin 2 namespace untuk public dan dashboard
 
-Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1'], function(){
+Route::group(['prefix'=>'v1/public','namespace'=>'App\Http\Controllers\api\V1'],function(){
+
+    Route::get('/blog',[BlogController::class,'publicIndex']);
+    Route::get('/blog/{blog}',[BlogController::class,'show']); // with slug
+
+});
+
+Route::group(['prefix'=>'v1/dashboard','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'],function(){
+
+    Route::get('/blog',[BlogController::class,'dashboardIndex']);
+
+});
+
+Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'], function(){
+
     Route::apiResource('blog',BlogController::class);
     Route::apiResource('user',UserController::class);
     Route::apiResource('agenda',AgendaController::class);
     Route::apiResource('balance',BalanceController::class);
     Route::apiResource('found',FoundController::class);
     Route::apiResource('lost',LostController::class);
+
 });

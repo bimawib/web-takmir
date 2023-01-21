@@ -16,6 +16,7 @@ class AgendaDetailResource extends JsonResource
     {
         return [
             'id'=>$this->id,
+            'agendaName'=>$this->agenda_name,
             'startTime'=>$this->start_time,
             'endTime'=>$this->end_time,
             'location'=>$this->location,

@@ -24,6 +24,7 @@ class BlogResource extends JsonResource
             'title'=>$this->title,
             'body'=>$this->body,
             'image'=>$this->image,
+            'isVerified'=>$this->is_verified,
             'publishedAt'=>$this->published_at
         ];
     }

@@ -17,7 +17,8 @@ class Balance extends Model
         'spend_balance',
         'incoming_balance',
         'total_balance',
-        'note'
+        'note',
+        'date'
     ];
 
     public function user(){

@@ -18,6 +18,7 @@ class AgendaDetailFactory extends Factory
     {
         return [
             'agenda_id'=>$this->faker->numberBetween(1,3),
+            'agenda_name'=>$this->faker->word(),
             'start_time'=>$this->faker->time('H:i'),
             'end_time'=>$this->faker->time('H:i'),
             'location'=>$this->faker->word(),
