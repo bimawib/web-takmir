@@ -38,10 +38,22 @@ Route::get('/sanctumtest',[SanctumTestController::class,'index'])->middleware('a
 // API/V1
 //
 
-Route::get('/v1/blog/slug/{slug}',[BlogController::class,'withSlug']); // use this for slug only
+// bikin 2 namespace untuk public dan dashboard
+
+Route::group(['prefix'=>'v1/public','namespace'=>'App\Http\Controllers\api\V1'],function(){
+
+    Route::get('/blog',[BlogController::class,'publicIndex']);
+    Route::get('/blog/{blog}',[BlogController::class,'show']); // with slug
+
+});
+
+Route::group(['prefix'=>'v1/dashboard','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'],function(){
+
+    Route::get('/blog',[BlogController::class,'dashboardIndex']);
+
+});
 
 Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'], function(){
-    Route::post('found/bulk',[FoundController::class,'bulkStore']);
 
     Route::apiResource('blog',BlogController::class);
     Route::apiResource('user',UserController::class);
@@ -49,4 +61,5 @@ Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1','middlew
     Route::apiResource('balance',BalanceController::class);
     Route::apiResource('found',FoundController::class);
     Route::apiResource('lost',LostController::class);
+
 });

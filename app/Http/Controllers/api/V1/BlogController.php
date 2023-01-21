@@ -10,12 +10,13 @@ namespace App\Http\Controllers\api\V1;
 
 use App\Models\Blog;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\StoreBlogRequest;
-use App\Http\Resources\V1\BlogResource;
-use App\Http\Requests\V1\UpdateBlogRequest;
-use App\Http\Resources\V1\BlogCollection;
 use App\Filters\V1\BlogFilter;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\BlogResource;
+use App\Http\Resources\V1\BlogCollection;
+use App\Http\Requests\V1\StoreBlogRequest;
+use App\Http\Requests\V1\UpdateBlogRequest;
 
 class BlogController extends Controller
 {
@@ -32,14 +33,10 @@ class BlogController extends Controller
         if(count($queryItem)==0){
             return new BlogCollection(Blog::where('is_verified',1)->paginate());
         } else {
-            $blogs = Blog::where($queryItem)->where('is_verified',1)->paginate();
+            $blogs = Blog::where($queryItem)->where('is_verified',1)->paginate(); //pake where where tapi kasih nilai default null;
 
             return new BlogCollection($blogs->appends($request->query()));
         }
-
-        // gonna make 1 condition flow for admin and owner so they can see unverified blog
-
-        // Blog::where()->with('user'); // kayanya setelah update terbaru with user ini bisa langsung dipake tanpa dipanggil wkwkkwawkoawkooawk
     }
 
     /**
@@ -62,6 +59,9 @@ class BlogController extends Controller
         }
 
         $request['user_id'] = auth('sanctum')->user()->id;
+
+        $autoVerified = auth('sanctum')->user()->is_admin;
+        $request['is_verified'] = $autoVerified;
 
         $request['slug'] = $this->slugCreate($request->title);
 
@@ -109,7 +109,9 @@ class BlogController extends Controller
         }
 
         if($user->is_admin == 0){
-            $request['is_verified'] = 0;
+            $request['is_verified'] = $blog->is_verified;
+        } elseif($user->is_admin == 1 || $user->is_owner == 1){
+            $request['is_verified'] = $request['isVerified'];
         }
 
         $request['slug'] = $this->slugCreate($request->title, $blog->title, $blog->id) ?? $blog->slug;
@@ -141,6 +143,59 @@ class BlogController extends Controller
         }
         Blog::destroy($blog->id);
     }
+
+    public function publicIndex(Request $request){
+        $filter = new BlogFilter();
+        $queryItem = $filter->transform($request); // [['column','operator','value']], ex = ('title','like','puasa')
+        
+        $isVerified = 1;
+
+        if(count($queryItem)==0){
+            return new BlogCollection(Blog::where('is_verified',$isVerified)->paginate());
+        } else {
+            $blogs = Blog::where($queryItem)->where('is_verified',$isVerified)->paginate();
+
+            return new BlogCollection($blogs->appends($request->query()));
+        }
+    }
+
+    public function dashboardIndex(Request $request)
+    {
+        $filter = new BlogFilter();
+        $queryItem = $filter->transform($request); // [['column','operator','value']], ex = ('title','like','puasa')
+
+        // return $queryItem;
+        $userIdField = 'user_id';
+        $userId = auth('sanctum')->user()->id;
+
+        $verifiedColumn = null;
+        $verifiedStatus = null;
+
+        $isAdmin = auth('sanctum')->user()->is_admin;
+        if($isAdmin == 1 && isset($request['forValidation'])){
+            
+            $validatedVerified = $request->validate(['forValidation'=>Rule::in([0,1])]);
+
+            $userIdField = null;
+            $userId = null;
+
+            $verifiedColumn = 'is_verified';
+            $verifiedStatus = $validatedVerified['forValidation'];
+        }
+        // return $request->query();
+        if(count($queryItem)==0){
+
+            $blogs = Blog::where($userIdField,$userId)->where($verifiedColumn, $verifiedStatus)->paginate();
+
+            return new BlogCollection($blogs->appends($request->query()));
+        } else {
+
+            $blogs = Blog::where($userIdField,$userId)->where($queryItem)->where($verifiedColumn, $verifiedStatus)->paginate();
+
+            return new BlogCollection($blogs->appends($request->query()));
+        }
+
+    }
     
     public function withSlug($slug){
         $blog = Blog::where('slug',$slug)->first();
@@ -164,4 +219,5 @@ class BlogController extends Controller
         $slug = $attacher."-".$randomizer.$model_id;
         return strtolower($slug);
     }
+
 }
