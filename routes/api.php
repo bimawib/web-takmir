@@ -44,6 +44,8 @@ Route::group(['prefix'=>'v1/public','namespace'=>'App\Http\Controllers\api\V1'],
 
     Route::get('/blog',[BlogController::class,'publicIndex']);
     Route::get('/blog/{blog}',[BlogController::class,'show']); // with slug
+    Route::get('/found',[FoundController::class,'index']);
+    Route::get('/found/{found}',[FoundController::class,'show']);
 
 });
 
