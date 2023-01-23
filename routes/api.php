@@ -51,6 +51,7 @@ Route::group(['prefix'=>'v1/public','namespace'=>'App\Http\Controllers\api\V1'],
     Route::get('/found/{found}',[FoundController::class,'show']);
     Route::get('/lost',[LostController::class,'index']);
     Route::get('/lost/{lost}',[LostController::class,'show']);
+    Route::get('/balance',[BalanceController::class,'publicIndex']);
 
 });
 
