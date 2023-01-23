@@ -56,6 +56,7 @@ Route::group(['prefix'=>'v1/public','namespace'=>'App\Http\Controllers\api\V1'],
 
 Route::group(['prefix'=>'v1/dashboard','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'],function(){
 
+    Route::get('/agenda',[AgendaController::class,'dashboardIndex']);
     Route::get('/blog',[BlogController::class,'dashboardIndex']);
     Route::get('/found',[FoundController::class,'dashboardIndex']);
     Route::get('/lost',[LostController::class,'dashboardIndex']);

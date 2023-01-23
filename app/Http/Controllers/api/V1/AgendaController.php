@@ -98,9 +98,9 @@ class AgendaController extends Controller
      */
     public function show(Agenda $agenda)
     {
+        $agenda = Agenda::where('slug',$agenda->slug)->with('agenda_detail')->first();
         return new AgendaResource($agenda);
         // should use slug instead for public reading
-        
     }
 
     /**
@@ -243,6 +243,29 @@ class AgendaController extends Controller
 
         $slug = $attacher."-".$randomizer.$model_id;
         return strtolower($slug);
+    }
+
+    public function dashboardIndex(Request $request){
+        $user = auth('sanctum')->user();
+        if($user->is_admin == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to access agenda index!'
+                ]
+            ],403);
+        }
+        $filter = new AgendaFilter();
+        $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
+
+        $includeDetails = $request->query('includeDetails');
+        $agenda = Agenda::where($queryItems);
+
+        if(isset($includeDetails) && $includeDetails == 1){
+            $agenda = $agenda->with('agenda_detail');
+        }
+
+        return new AgendaCollection($agenda->paginate()->appends($request->query()));
     }
 
 }
