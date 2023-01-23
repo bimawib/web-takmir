@@ -164,4 +164,69 @@ class FoundController extends Controller
         $slug = $attacher."-".$randomizer.$model_id;
         return strtolower($slug);
     }
+
+    public function dashboardIndex(Request $request){
+        $filter = new FoundFilter();
+        $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
+
+        $isReturned = $request->query('isReturned');
+        $Found = Found::where($queryItems);
+
+        // dd(isset($isReturned));
+        $isAdmin = auth('sanctum')->user()->is_admin;
+        if($isAdmin == 0){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to store found item!'
+                ]
+            ],403);
+        }
+
+        if(isset($isReturned) && $isReturned == 0){
+            return new FoundCollection($Found->where('is_returned',0)->paginate()->appends($request->query()));
+        } elseif(isset($isReturned) && $isReturned == 1){
+            return new FoundCollection($Found->where('is_returned',1)->paginate()->appends($request->query()));
+        } else {
+            return new FoundCollection($Found->paginate()->appends($request->query()));
+        }
+    }
+
+    // public function dashboardIndex(Request $request)
+    // {
+    //     $filter = new BlogFilter();
+    //     $queryItem = $filter->transform($request); // [['column','operator','value']], ex = ('title','like','puasa')
+
+    //     // return $queryItem;
+    //     $userIdField = 'user_id';
+    //     $userId = auth('sanctum')->user()->id;
+
+    //     $verifiedColumn = null;
+    //     $verifiedStatus = null;
+
+    //     $isAdmin = auth('sanctum')->user()->is_admin;
+    //     if($isAdmin == 1 && isset($request['forValidation'])){
+            
+    //         $validatedVerified = $request->validate(['forValidation'=>Rule::in([0,1])]);
+
+    //         $userIdField = null;
+    //         $userId = null;
+
+    //         $verifiedColumn = 'is_verified';
+    //         $verifiedStatus = $validatedVerified['forValidation'];
+    //     }
+    //     // return $request->query();
+    //     if(count($queryItem)==0){
+
+    //         $blogs = Blog::where($userIdField,$userId)->where($verifiedColumn, $verifiedStatus)->paginate();
+
+    //         return new BlogCollection($blogs->appends($request->query()));
+    //     } else {
+
+    //         $blogs = Blog::where($userIdField,$userId)->where($queryItem)->where($verifiedColumn, $verifiedStatus)->paginate();
+
+    //         return new BlogCollection($blogs->appends($request->query()));
+    //     }
+
+    // }
 }
