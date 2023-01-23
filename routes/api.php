@@ -3,12 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\V1\AuthController;
-use App\Http\Controllers\api\V1\AgendaController;
-use App\Http\Controllers\api\V1\BalanceController;
 use App\Http\Controllers\api\V1\BlogController;
-use App\Http\Controllers\api\V1\FoundController;
+use App\Http\Controllers\api\V1\LostController;
 use App\Http\Controllers\api\V1\UserController;
 use App\Http\Controllers\SanctumTestController;
+use App\Http\Controllers\api\V1\FoundController;
+use App\Http\Controllers\api\V1\AgendaController;
+use App\Http\Controllers\api\V1\BalanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,10 +43,14 @@ Route::get('/sanctumtest',[SanctumTestController::class,'index'])->middleware('a
 
 Route::group(['prefix'=>'v1/public','namespace'=>'App\Http\Controllers\api\V1'],function(){
 
-    Route::get('/blog',[BlogController::class,'publicIndex']);
+    Route::get('/agenda',[AgendaController::class,'index']);
+    Route::get('/agenda/{agenda}',[AgendaController::class,'show']);
+    Route::get('/blog',[BlogController::class,'index']);
     Route::get('/blog/{blog}',[BlogController::class,'show']); // with slug
     Route::get('/found',[FoundController::class,'index']);
     Route::get('/found/{found}',[FoundController::class,'show']);
+    Route::get('/lost',[LostController::class,'index']);
+    Route::get('/lost/{lost}',[LostController::class,'show']);
 
 });
 
@@ -53,6 +58,7 @@ Route::group(['prefix'=>'v1/dashboard','namespace'=>'App\Http\Controllers\api\V1
 
     Route::get('/blog',[BlogController::class,'dashboardIndex']);
     Route::get('/found',[FoundController::class,'dashboardIndex']);
+    Route::get('/lost',[LostController::class,'dashboardIndex']);
 
 });
 

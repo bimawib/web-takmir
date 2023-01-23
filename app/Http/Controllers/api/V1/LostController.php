@@ -117,6 +117,15 @@ class LostController extends Controller
      */
     public function destroy(Lost $lost)
     {
+        $user = auth('sanctum')->user();
+        if($user->is_admin == 0 && $user->id != $lost->user_id){
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to store found item!'
+                ]
+            ],403);
+        }
         Lost::destroy($lost->id);
     }
 
@@ -136,5 +145,31 @@ class LostController extends Controller
 
         $slug = $attacher."-".$randomizer.$model_id;
         return strtolower($slug);
+    }
+
+    public function dashboardIndex(Request $request){
+        $filter = new LostFilter();
+        $queryItems = $filter->transform($request); // ['nama kolom', 'operator ex : like, <, =', 'value']
+
+        $isReturned = $request->query('isReturned');
+        $Lost = Lost::where($queryItems);
+
+        $userIdField = 'user_id';
+        $userId = auth('sanctum')->user()->id;
+        
+        $isAdmin = auth('sanctum')->user()->is_admin;
+        
+        if($isAdmin == 1 && isset($request['forValidation'])){
+            $userIdField = null;
+            $userId = null;
+        } // return semua lost seperti index (untuk review)
+
+        if(isset($isReturned) && $isReturned == 0){
+            return new LostCollection($Lost->where('is_returned',0)->where($userIdField,$userId)->paginate()->appends($request->query()));
+        } elseif(isset($isReturned) && $isReturned == 1){
+            return new LostCollection($Lost->where('is_returned',1)->where($userIdField,$userId)->paginate()->appends($request->query()));
+        } else {
+            return new LostCollection($Lost->where($userIdField,$userId)->paginate()->appends($request->query()));
+        }
     }
 }
