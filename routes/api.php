@@ -53,7 +53,7 @@ Route::group(['prefix'=>'v1/public','namespace'=>'App\Http\Controllers\api\V1'],
     Route::get('/lost/{lost}',[LostController::class,'show']);
     Route::get('/balance',[BalanceController::class,'publicIndex']);
 
-    Route::get('/user/{user}',[UserController::class,'show']);
+    Route::get('/user/{user}',[UserController::class,'publicShow']);
 
 });
 
@@ -64,12 +64,14 @@ Route::group(['prefix'=>'v1/dashboard','namespace'=>'App\Http\Controllers\api\V1
     Route::get('/found',[FoundController::class,'dashboardIndex']);
     Route::get('/lost',[LostController::class,'dashboardIndex']);
 
+    Route::get('/user',[UserController::class,'index']); // for owner only
+    Route::get('/user/{user}',[UserController::class,'show']);
+
 });
 
 Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'], function(){
 
     Route::apiResource('blog',BlogController::class);
-    Route::apiResource('user',UserController::class);
     Route::apiResource('agenda',AgendaController::class);
     Route::apiResource('balance',BalanceController::class);
     Route::apiResource('found',FoundController::class);

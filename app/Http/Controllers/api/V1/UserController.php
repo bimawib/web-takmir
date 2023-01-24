@@ -15,7 +15,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $userInfo = auth('sanctum')->user();
+
+        if($userInfo->is_owner != 1){ 
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to see this user information!'
+                ]
+            ],403);
+        }
+
+        $user = User::latest()->paginate();
+        return $user;
+
     }
 
     /**
@@ -37,10 +50,24 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $userInfo = auth('sanctum')->user();
+
+        if($user->id != $userInfo->id){
+            if($userInfo->is_owner != 1){ 
+            return response()->json([
+                'error'=>[
+                    'status'=>403,
+                    'message'=>'You dont have ability to see this user information!'
+                ]
+            ],403);
+            }
+        }
+
         return response()->json([
             'data'=>[
                 'name'=>$user->name,
-                'email'=>$user->email
+                'email'=>$user->email,
+                // 'password'=>$user->password
             ]
         ],200);
     }
@@ -54,7 +81,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        // $cek = password_verify('edensuki',$user->password);
     }
 
     /**
@@ -66,5 +93,14 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+    public function publicShow(User $user)
+    {
+        return response()->json([
+            'data'=>[
+                'name'=>$user->name,
+                'email'=>$user->email
+            ]
+        ],200);
     }
 }
