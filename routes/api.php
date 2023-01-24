@@ -53,6 +53,8 @@ Route::group(['prefix'=>'v1/public','namespace'=>'App\Http\Controllers\api\V1'],
     Route::get('/lost/{lost}',[LostController::class,'show']);
     Route::get('/balance',[BalanceController::class,'publicIndex']);
 
+    Route::get('/user/{user}',[UserController::class,'show']);
+
 });
 
 Route::group(['prefix'=>'v1/dashboard','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'],function(){
