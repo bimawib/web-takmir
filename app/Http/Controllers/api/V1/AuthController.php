@@ -13,8 +13,8 @@ class AuthController extends Controller
     public function register(Request $request){
         $request->validate([
             'name'=>'required|string|max:255',
-            'email'=>'required|email:dns|max:255|unique:users',
-            'password'=>'required|string|min:5|confirmed'
+            'email'=>'required|email|max:255|unique:users|ends_with:@ub.ac.id,@student.ub.ac.id',
+            'password'=>'required|string|min:8|confirmed'
         ]);
 
         $user = User::create([
@@ -24,6 +24,8 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('webtakmir')->plainTextToken;
+
+        // return $user->id;
 
         return response()->json([
             'data'=>$user,

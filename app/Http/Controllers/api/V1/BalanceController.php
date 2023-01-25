@@ -144,7 +144,7 @@ class BalanceController extends Controller
     {
         // hanya update title,date dan note saja, karna akan rusak struktur total balance atau update dengan cara hapus dan create baru
         // jadikan spend balance/ incoming balance 0 jika delete, pakai note untuk notice canceled-transaction
-
+        // FINAL = NO UPDATE OR DESTROY FOR BALANCE
     }
 
     /**
@@ -157,9 +157,50 @@ class BalanceController extends Controller
     {
         // sebelum delete pastikan kurangi atau tambahkan totalBalance (delete this balance, and create new balance dengan title cancel input for ($balance->title))
         // might just wanna make 1 more table for total_balance
+        // FINAL = NO UPDATE OR DESTROY FOR BALANCE
     }
 
-    public function latestBalance(){
+    public function publicIndex(){
+        $now = now();
+        $explodeDate = explode("-",$now);
+        $firstLimit = $explodeDate[1]; // month
+        $secondLimit = ($firstLimit + 1);
 
-    } // this is for public consumption
+        $firstYear = $explodeDate[0]; // year
+        $secondYear = $firstYear;
+        
+        if($secondLimit < 10){
+            $secondLimit = 0 . ($firstLimit + 1);
+        }
+        if($firstLimit == 12){
+            $secondYear = $firstYear + 1;
+            $secondLimit = "01";
+        }
+
+        $firstQueryLimit = $firstYear . "-" . $firstLimit . "-01 00:01:01";
+        $secondQueryLimit = $secondYear . "-" . $secondLimit . "-01 00:01:01";
+        
+        $balance = Balance::where('date','>',$firstQueryLimit)->where('date','<',$secondQueryLimit)->get();
+
+        $totalMonthlyIncome = 0;
+        $totalMonthlySpend = 0;
+        $totalBalance = 0;
+        
+        foreach($balance as $key => $value){
+            $totalMonthlyIncome += $value['incoming_balance'];
+            $totalMonthlySpend += $value['spend_balance'];
+            $totalBalance = $value['total_balance'];
+        }
+
+        return response()->json([
+            'data'=>[
+                'month'=>$firstLimit,
+                'year'=>$firstYear,
+                'totalBalance'=>$totalBalance,
+                'monthlyIncome'=>$totalMonthlyIncome,
+                'monthlySpend'=>$totalMonthlySpend
+            ]
+        ],200);
+    }
+
 }

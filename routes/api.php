@@ -3,12 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\V1\AuthController;
-use App\Http\Controllers\api\V1\AgendaController;
-use App\Http\Controllers\api\V1\BalanceController;
 use App\Http\Controllers\api\V1\BlogController;
-use App\Http\Controllers\api\V1\FoundController;
+use App\Http\Controllers\api\V1\LostController;
 use App\Http\Controllers\api\V1\UserController;
 use App\Http\Controllers\SanctumTestController;
+use App\Http\Controllers\api\V1\FoundController;
+use App\Http\Controllers\api\V1\AgendaController;
+use App\Http\Controllers\api\V1\BalanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,21 +43,37 @@ Route::get('/sanctumtest',[SanctumTestController::class,'index'])->middleware('a
 
 Route::group(['prefix'=>'v1/public','namespace'=>'App\Http\Controllers\api\V1'],function(){
 
-    Route::get('/blog',[BlogController::class,'publicIndex']);
+    Route::get('/agenda',[AgendaController::class,'index']);
+    Route::get('/agenda/{agenda}',[AgendaController::class,'show']);
+    Route::get('/blog',[BlogController::class,'index']);
     Route::get('/blog/{blog}',[BlogController::class,'show']); // with slug
+    Route::get('/found',[FoundController::class,'index']);
+    Route::get('/found/{found}',[FoundController::class,'show']);
+    Route::get('/lost',[LostController::class,'index']);
+    Route::get('/lost/{lost}',[LostController::class,'show']);
+    Route::get('/balance',[BalanceController::class,'publicIndex']);
+
+    Route::get('/user/{user}',[UserController::class,'publicShow']);
 
 });
 
 Route::group(['prefix'=>'v1/dashboard','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'],function(){
 
+    Route::get('/agenda',[AgendaController::class,'dashboardIndex']);
     Route::get('/blog',[BlogController::class,'dashboardIndex']);
+    Route::get('/found',[FoundController::class,'dashboardIndex']);
+    Route::get('/lost',[LostController::class,'dashboardIndex']);
+
+    Route::get('/user',[UserController::class,'index']); // for owner only
+    Route::get('/user/{user}',[UserController::class,'show']);
+    Route::put('/user/{user}',[UserController::class,'update'])->middleware('throttle:12,1');
+    Route::patch('/user/{user}',[UserController::class,'update'])->middleware('throttle:12,1');
 
 });
 
 Route::group(['prefix'=>'v1','namespace'=>'App\Http\Controllers\api\V1','middleware'=>'auth:sanctum'], function(){
 
     Route::apiResource('blog',BlogController::class);
-    Route::apiResource('user',UserController::class);
     Route::apiResource('agenda',AgendaController::class);
     Route::apiResource('balance',BalanceController::class);
     Route::apiResource('found',FoundController::class);
