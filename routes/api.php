@@ -66,6 +66,8 @@ Route::group(['prefix'=>'v1/dashboard','namespace'=>'App\Http\Controllers\api\V1
 
     Route::get('/user',[UserController::class,'index']); // for owner only
     Route::get('/user/{user}',[UserController::class,'show']);
+    Route::put('/user/{user}',[UserController::class,'update'])->middleware('throttle:12,1');
+    Route::patch('/user/{user}',[UserController::class,'update'])->middleware('throttle:12,1');
 
 });
 

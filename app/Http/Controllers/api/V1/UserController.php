@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\V1;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -79,9 +80,57 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        // $cek = password_verify('edensuki',$user->password);
+
+        // $ceking = $request['name'] ?? $user->name;
+        // return $ceking;
+
+        $userInfo = auth('sanctum')->user();
+        if($user->id != $userInfo->id){
+            if($userInfo->is_owner != 1){ 
+                return response()->json([
+                    'error'=>[
+                        'status'=>403,
+                        'message'=>'You dont have ability to update this user information!'
+                    ]
+                ],403);
+            }
+        }
+
+        if($userInfo->is_owner == 1 && $user->id != $userInfo->id){
+            $adminUpdate['is_verified'] = $request['isVerified'] ?? $user->is_verified;
+            $adminUpdate['is_admin'] = $request['isAdmin'] ?? $user->is_admin;
+
+            User::where('id',$user->id)->update($adminUpdate);
+        }
+        
+        // if old or new password isset -> validate both of them with required,
+        // $cek = password_verify($request['oldPassword'],$user->password);
+        $userUpdate['password'] = $user->password;
+
+        if(isset($request['oldPassword']) || isset($request['newPassword'])){
+            $userValidation = $request->validate([
+                'oldPassword'=>'required|string',
+                'newPassword'=>'required|string|min:8'
+            ]);
+            if(password_verify($request['oldPassword'],$user->password) != 1){
+                return response()->json([
+                    'error'=>[
+                        'status'=>406,
+                        'message'=>'The old password does not match!'
+                    ]
+                ],406);
+            } else {
+                $userUpdate['password'] = bcrypt($request['newPassword']);
+            }
+        }
+
+        if($user->id == $userInfo->id){
+            $userUpdate['name'] = $request['name'] ?? $user->name;
+            User::where('id',$user->id)->update($userUpdate);
+        }
+
     }
 
     /**
@@ -94,6 +143,7 @@ class UserController extends Controller
     {
         //
     }
+
     public function publicShow(User $user)
     {
         return response()->json([

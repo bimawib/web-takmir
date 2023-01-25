@@ -14,7 +14,7 @@ class AuthController extends Controller
         $request->validate([
             'name'=>'required|string|max:255',
             'email'=>'required|email|max:255|unique:users|ends_with:@ub.ac.id,@student.ub.ac.id',
-            'password'=>'required|string|min:5|confirmed'
+            'password'=>'required|string|min:8|confirmed'
         ]);
 
         $user = User::create([
