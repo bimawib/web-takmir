@@ -25,6 +25,8 @@ class AuthController extends Controller
 
         $token = $user->createToken('webtakmir')->plainTextToken;
 
+        // return $user->id;
+
         return response()->json([
             'data'=>$user,
             'access_token'=>$token,

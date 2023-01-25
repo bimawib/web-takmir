@@ -14,7 +14,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $userInfo = auth('sanctum')->user();
 
@@ -27,7 +27,14 @@ class UserController extends Controller
             ],403);
         }
 
-        $user = User::latest()->paginate();
+        $emailField = null;
+        $emailQuery = null;
+        if(isset($request['email'])){
+            $emailField = 'email';
+            $emailQuery = $request['email'];
+        }
+
+        $user = User::where($emailField,$emailQuery)->latest()->paginate();
         return $user;
 
     }
