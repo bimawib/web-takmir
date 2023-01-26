@@ -26,8 +26,9 @@ class AuthController extends Controller
 
         $token = $user->createToken('webtakmir')->plainTextToken;
 
+        // create user validation code
         $randomNumber = rand(1000000,9999999);
-        $validationCode = "verify" . $randomNumber . $user->id;
+        $validationCode = "MBU" . $randomNumber . $user->id;
         $now = now();
         $addedTime = strtotime('+10 minutes', strtotime($now));
         $expirationDate = date('Y-m-d H:i:s',$addedTime);
@@ -37,6 +38,7 @@ class AuthController extends Controller
             'validation_code'=>$validationCode,
             'expiration_date'=>$expirationDate
         ]);
+        //
 
         return response()->json([
             'data'=>$user,
@@ -64,9 +66,11 @@ class AuthController extends Controller
         $token = $user->createToken('webtakmir')->plainTextToken;
 
         $is_verified = "user has been verified";
+
+        // create user validation code
         if($user->is_verified == 0){
             $randomNumber = rand(1000000,9999999);
-            $validationCode = "verify" . $randomNumber . $user->id;
+            $validationCode = "MBU" . $randomNumber . $user->id;
             $now = now();
             $addedTime = strtotime('+10 minutes', strtotime($now));
             $expirationDate = date('Y-m-d H:i:s',$addedTime);
@@ -78,7 +82,7 @@ class AuthController extends Controller
             ]);
 
             $is_verified = "user is not verified";
-        }
+        } //
 
         return response()->json([
             'data'=>$user,

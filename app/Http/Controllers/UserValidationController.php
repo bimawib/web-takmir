@@ -18,7 +18,7 @@ class UserValidationController extends Controller
         $validation = UserValidation::where('validation_code',$code)->first();
 
         if(isset($validation) != 1){
-            $status = "VALIDATION CODE NOT VALID. FAILED TO VERIFY YOUR ACCOUNT!";
+            $status = "VALIDATION CODE NOT VALID!";
         } else {
             if($validation->expiration_date > $now){
                 $status = "CONGRATULATIONS, YOUR ACCOUNT HAS BEEN VERIFIED";
@@ -26,7 +26,7 @@ class UserValidationController extends Controller
                 User::where('id',$validation->user_id)->update($userUpdate);
                 UserValidation::where('user_id',$validation->user_id)->delete();
             } else {
-                $status = "VALIDATION CODE NOT VALID. FAILED TO VERIFY YOUR ACCOUNT!";
+                $status = "VALIDATION CODE NOT VALID!";
                 UserValidation::where('user_id',$validation->user_id)->delete();
             }
         }
