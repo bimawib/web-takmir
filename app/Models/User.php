@@ -61,5 +61,8 @@ class User extends Authenticatable
     public function balance(){
         return $this->hasMany(Balance::class);
     }
+    public function userValidation(){
+        return $this->hasMany(UserValidation::class);
+    }
 
 }

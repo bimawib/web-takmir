@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\V1;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\UserValidation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,7 +26,17 @@ class AuthController extends Controller
 
         $token = $user->createToken('webtakmir')->plainTextToken;
 
-        // return $user->id;
+        $randomNumber = rand(1000000,9999999);
+        $validationCode = "verify" . $randomNumber . $user->id;
+        $now = now();
+        $addedTime = strtotime('+10 minutes', strtotime($now));
+        $expirationDate = date('Y-m-d H:i:s',$addedTime);
+
+        $validation = UserValidation::create([
+            'user_id'=>$user->id,
+            'validation_code'=>$validationCode,
+            'expiration_date'=>$expirationDate
+        ]);
 
         return response()->json([
             'data'=>$user,
@@ -52,10 +63,28 @@ class AuthController extends Controller
 
         $token = $user->createToken('webtakmir')->plainTextToken;
 
+        $is_verified = "user has been verified";
+        if($user->is_verified == 0){
+            $randomNumber = rand(1000000,9999999);
+            $validationCode = "verify" . $randomNumber . $user->id;
+            $now = now();
+            $addedTime = strtotime('+10 minutes', strtotime($now));
+            $expirationDate = date('Y-m-d H:i:s',$addedTime);
+
+            $validation = UserValidation::create([
+                'user_id'=>$user->id,
+                'validation_code'=>$validationCode,
+                'expiration_date'=>$expirationDate
+            ]);
+
+            $is_verified = "user is not verified";
+        }
+
         return response()->json([
             'data'=>$user,
             'access_token'=>$token,
-            'token_type'=>'Bearer'
+            'is_verified'=>$is_verified,
+            'token_type'=>'Bearer',
         ]);
     }
 

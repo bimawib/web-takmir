@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserValidationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return 'project web takmir';
 });
+Route::get('/validation/{code}',[UserValidationController::class,'index']);
