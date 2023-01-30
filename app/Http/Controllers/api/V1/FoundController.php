@@ -99,7 +99,13 @@ class FoundController extends Controller
                 ]
             ],403);
         }
-        $request['slug'] = $this->slugCreate($request->title, $found->title, $found->id) ?? $found->slug;
+        
+        if(isset($request->title) == 1){
+            $request['slug'] = $this->slugCreate($request->title, $found->title, $found->id);
+        } else {
+            $request['slug'] = $found->slug;
+        }
+        // $request['slug'] = $this->slugCreate($request->title, $found->title, $found->id) ?? $found->slug;
 
         $found->update($request->all());
 
