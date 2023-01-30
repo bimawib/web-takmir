@@ -108,8 +108,16 @@ class UserController extends Controller
         if($userInfo->is_owner == 1 && $user->id != $userInfo->id){
             $adminUpdate['is_verified'] = $request['isVerified'] ?? $user->is_verified;
             $adminUpdate['is_admin'] = $request['isAdmin'] ?? $user->is_admin;
+            $adminUpdate['is_owner'] = 0;
 
             User::where('id',$user->id)->update($adminUpdate);
+
+            return response()->json([
+                'success'=>[
+                    'status'=>201,
+                    'message'=>'This user authority access has been updated!'
+                ]
+            ],201);
         }
         
         // if old or new password isset -> validate both of them with required,
