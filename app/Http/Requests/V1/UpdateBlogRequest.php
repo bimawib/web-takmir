@@ -32,7 +32,7 @@ class UpdateBlogRequest extends FormRequest
             ];
         } else {
             return [
-                'title'=>'required|max:255',
+                'title'=>'sometimes|required|max:255',
                 'body'=>'sometimes|required',
                 // 'image'=>'sometimes|image|file|max:1024'
             ];

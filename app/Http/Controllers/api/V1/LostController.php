@@ -107,7 +107,6 @@ class LostController extends Controller
         } else {
             $request['slug'] = $lost->slug;
         }
-        // $request['slug'] = $this->slugCreate($request->title, $lost->title, $lost->id) ?? $lost->slug;
 
         $lost->update($request->all());
 

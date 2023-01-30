@@ -114,7 +114,11 @@ class BlogController extends Controller
             $request['is_verified'] = $request['isVerified'];
         }
 
-        $request['slug'] = $this->slugCreate($request->title, $blog->title, $blog->id) ?? $blog->slug;
+        if(isset($request->title) == 1){
+            $request['slug'] = $this->slugCreate($request->title, $blog->title, $blog->id);
+        } else {
+            $request['slug'] = $blog->slug;
+        }
 
         $blog->update($request->all());
 
