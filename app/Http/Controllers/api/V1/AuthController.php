@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\UserValidation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MyTestMail;
 
 class AuthController extends Controller
 {
@@ -38,7 +40,17 @@ class AuthController extends Controller
             'validation_code'=>$validationCode,
             'expiration_date'=>$expirationDate
         ]);
-        //
+
+        $validationText = "Click this link to verify your account";
+        $validationUrl = 'http://127.0.0.1:8000/validation/'.$validationCode;
+
+        $details = [
+            'title'=>'Confirmation code for ',
+            'body'=>$validationText,
+            'url'=>$validationUrl,
+            'username'=>$user->name
+        ];
+        Mail::to($request->email)->send(new MyTestMail($details));
 
         return response()->json([
             'data'=>$user,
